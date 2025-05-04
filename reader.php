@@ -1,5 +1,6 @@
 <?php
 
+include_once('config.php');
 include_once('cardinals.php');
 include_once('icao.php');
 
@@ -8,7 +9,7 @@ include_once('icao.php');
 //
 function getReceiver()
 {
-   $receiver = json_decode(file_get_contents('./data/receiver.json'));
+   $receiver = json_decode(file_get_contents(DATAPATH . 'receiver.json'));
    return $receiver;
 }
 
@@ -19,7 +20,7 @@ function getOrderedFileList()
 {
    $fileList = [];
 
-   $dir = opendir('./data');
+   $dir = opendir(DATAPATH);
    if($dir)
    {
       while($entry = readdir($dir))
@@ -28,10 +29,15 @@ function getOrderedFileList()
          if(strtolower($fileInfo['extension']) == 'json' &&
             substr($entry, 0, 8) == 'history_')
          {
-            $header = json_decode(file_get_contents('./data/' . $entry));
+            $header = json_decode(file_get_contents(DATAPATH . $entry));
             $fileList[(string)$header->now] = $entry;
          }
       }
+   }
+   else
+   {
+      printf("Unable to open history directory\n");
+      exit;
    }
    // sort the list of files by timestamp
    ksort($fileList);
@@ -46,7 +52,7 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
 {
    foreach($fileList as $timeStamp => $fileName)
    {
-      $content = json_decode(file_get_contents('./data/' . $fileName));
+      $content = json_decode(file_get_contents(DATAPATH . $fileName));
       if($content)
       {
          if(isset($content->aircraft) && is_array($content->aircraft))
@@ -98,7 +104,7 @@ function processAircraftExtract($receiver, $fileList)
 
    foreach($fileList as $timeStamp => $fileName)
    {
-      $content = json_decode(file_get_contents('./data/' . $fileName));
+      $content = json_decode(file_get_contents(DATAPATH . $fileName));
       if($content)
       {
          if(isset($content->aircraft) && is_array($content->aircraft))
@@ -254,9 +260,9 @@ for($index = 0; $index < getCardinalCount(); $index++)
 }
 
 // pre-load the existing data from previous run
-if(file_exists('altitude-stats.json'))
+if(file_exists(ALTITUDE_FILE))
 {
-   $dataset = json_decode(file_get_contents('altitude-stats.json'), true);
+   $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
 }
 
 switch($mode)
@@ -264,10 +270,12 @@ switch($mode)
    case 'altitude': 
       $dataset = processCardinalAltitudeExtract($receiver, $fileList, $dataset);
       outputAltitudeResults($dataset);
-      file_put_contents('altitude-stats.json', json_encode($dataset, JSON_PRETTY_PRINT));
+      file_put_contents(ALTITUDE_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
       break;
    case 'aircraft':
       $dataset = processAircraftExtract($receiver, $fileList);
-      outputAircraftResults($dataset);
-      file_put_contents('aircraft_history.json', json_encode($dataset, JSON_PRETTY_PRINT));
+      //
+      // This is a large listing
+      //outputAircraftResults($dataset);
+      file_put_contents(AIRCRAFT_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
 }

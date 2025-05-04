@@ -1,5 +1,6 @@
 <?php
 
+include_once('config.php');
 include_once('cardinals.php');
 include_once('polar.php');
 
@@ -94,7 +95,7 @@ function altitudeTable($map)
 // main application code
 //
 
-$dataset = json_decode(file_get_contents('altitude-stats.json'), true);
+$dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
 
 $map = createPolarMap(35, 6);
 populateAltitudeMap($map, $dataset);

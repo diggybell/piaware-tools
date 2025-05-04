@@ -34,6 +34,14 @@ The final installation step is setting up web access to the main page. I run my 
 ```
 sudo ln -s <your source directory> /var/www/html/ads-b
 ```
+You can then access the web page with the URL pattern shown below.
+```
+http://<hostname>/ads-b/altitude-range.php
+
+or
+
+https://<hostname>/ads-b/altitude-range.php
+```
 
 ## Operation
 These tools can be operated manually or can be integrated into crontab for automated processing.

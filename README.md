@@ -1,6 +1,7 @@
 # piaware-tools
 PHP Utilities to Analyze PiAware ADS-B Data
 
+![image info](./docs/Sample-Chart.png)
 ## Introduction
 These tools were created to analyze aircraft history data produced by
 the PiAware ADS-B feeder. This page will describe the installation and operation of the tools.

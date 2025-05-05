@@ -98,4 +98,5 @@ All that is required to reset the data is to remove altitude-stats.json. This ca
 ```
 If you would like to keep a daily history of the data you can use the following line in crontab
 ```
-55 23 * * * cd <your source directory>; mv altitude-stats.json <your history directory>/altitude-history-`data "+%Y-%m-%d".json
+55 23 * * * cd <your source directory>; mv altitude-stats.json <your history directory>/altitude-history-`data "+\%Y-\%m-\%d".json
+```

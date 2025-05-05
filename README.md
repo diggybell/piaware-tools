@@ -1,6 +1,7 @@
 # piaware-tools
 PHP Utilities to Analyze PiAware ADS-B Data
 
+![image info](./docs/Sample-Chart.png)
 ## Introduction
 These tools were created to analyze aircraft history data produced by
 the PiAware ADS-B feeder. This page will describe the installation and operation of the tools.
@@ -33,6 +34,14 @@ mkdir data
 The final installation step is setting up web access to the main page. I run my system on Linux and use a symbolic link from the default web tree to my source.
 ```
 sudo ln -s <your source directory> /var/www/html/ads-b
+```
+You can then access the web page with the URL pattern shown below.
+```
+http://<hostname>/ads-b/altitude-range.php
+
+or
+
+https://<hostname>/ads-b/altitude-range.php
 ```
 
 ## Operation

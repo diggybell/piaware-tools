@@ -96,6 +96,11 @@ function altitudeTable($map)
 //
 
 $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
+if(!is_array($dataset))
+{
+   printf("Error retriving history data\n");
+   exit;
+}
 
 $map = createPolarMap(35, 6);
 populateAltitudeMap($map, $dataset);

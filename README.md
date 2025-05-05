@@ -98,4 +98,18 @@ All that is required to reset the data is to remove altitude-stats.json. This ca
 ```
 If you would like to keep a daily history of the data you can use the following line in crontab
 ```
-55 23 * * * cd <your source directory>; mv altitude-stats.json <your history directory>/altitude-history-`data "+%Y-%m-%d".json
+55 23 * * * cd <your source directory>; mv altitude-stats.json <your history directory>/altitude-history-`data "+\%Y-\%m-\%d".json
+```
+
+## Re-usable Code
+There are several code modules that can be re-purposed for other uses.
+
+### cardinals.php
+This module contains functions that are useful for working with cardinal directions on a compass.
+
+### icao.php
+
+This module can be used to convert an ICAO Hex code to a US N-number. (US Aircraft Only)
+
+### polar
+This module contains the base polar diagram functions. It also contains functions for converting between Polar coordinates (GPS) and Cartesian coordinates (display).

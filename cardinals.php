@@ -46,7 +46,7 @@ function getDistanceAndBearing($lat1, $lon1, $lat2, $lon2)
 	$bearingWR = getCardinal($bearingDeg);
     $rangeRing = getRangeRing($miles);
 
-	return [ 'nm' => $miles, 'km' => $km, 'bearing' => $bearingDeg, 'cardinal' => $bearingWR, 'ring' => $rangeRing];
+    return [ 'nm' => $miles, 'km' => $km, 'bearing' => $bearingDeg, 'cardinal' => $bearingWR, 'ring' => $rangeRing];
 }
 
 //

@@ -120,6 +120,7 @@ function processAircraftExtract($receiver, $fileList)
                   $aircraftList[$aircraft->hex]['icao'] = $aircraft->hex;
                   $aircraftList[$aircraft->hex]['registry'] = icaoTailNumber($aircraft->hex);
                   $aircraftList[$aircraft->hex]['category'] = $aircraft->category;
+                  $aircraftList[$aircraft->hex]['country'] = getICAOCountry($aircraft->hex);
                   $aircraftList[$aircraft->hex]['positions'][$timeStamp] =
                   [
                      'latitude'    => $aircraft->lat,

@@ -100,8 +100,6 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
 //
 function processAircraftExtract($receiver, $fileList)
 {
-   $aircraftList = [];
-
    foreach($fileList as $timeStamp => $fileName)
    {
       $content = json_decode(file_get_contents(DATAPATH . $fileName));
@@ -260,20 +258,26 @@ for($index = 0; $index < getCardinalCount(); $index++)
    $dataset[getCardinalLabel($index)] = $entry;
 }
 
-// pre-load the existing data from previous run
-if(file_exists(ALTITUDE_FILE))
-{
-   $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
-}
-
 switch($mode)
 {
    case 'altitude': 
+      // load the existing data from previous run
+      if(file_exists(ALTITUDE_FILE))
+      {
+         $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
+      }
+      
       $dataset = processCardinalAltitudeExtract($receiver, $fileList, $dataset);
       outputAltitudeResults($dataset);
       file_put_contents(ALTITUDE_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
       break;
    case 'aircraft':
+      // load the existing data from previous run
+      if(file_exists(AIRCRAFT_FILE))
+      {
+         $dataset = json_decode(file_get_contents(AIRCRAFT_FILE), true);
+      }
+      
       $dataset = processAircraftExtract($receiver, $fileList);
       //
       // This is a large listing

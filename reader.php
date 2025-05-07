@@ -113,13 +113,17 @@ function processAircraftExtract($receiver, $fileList)
                   isset($aircraft->lat) &&
                   isset($aircraft->lon))
                {
-                  //printf("Adding aircraft data (%s)\n", $aircraft->hex);
                   $result = getDistanceAndBearing($receiver->lat, $receiver->lon, $aircraft->lat, $aircraft->lon);
-                  $aircraftList[$aircraft->hex]['icao'] = $aircraft->hex;
-                  $aircraftList[$aircraft->hex]['registry'] = icaoTailNumber($aircraft->hex);
-                  $aircraftList[$aircraft->hex]['category'] = $aircraft->category;
-                  $aircraftList[$aircraft->hex]['country'] = getICAOCountry($aircraft->hex);
-                  $aircraftList[$aircraft->hex]['positions'][$timeStamp] =
+          
+                  $aircraftKey = strtoupper($aircraft->hex);
+                  $timestampKey = date('Ymd-His', $timeStamp);
+
+                  $aircraftList[$aircraftKey]['icao'] = $aircraftKey;
+                  $aircraftList[$aircraftKey]['registry'] = icaoTailNumber($aircraftKey);
+                  $aircraftList[$aircraftKey]['category'] = $aircraft->category;
+                  $aircraftList[$aircraftKey]['country'] = getICAOCountry($aircraftKey);
+                  $aircraftList[$aircraftKey]['tracklength'] = 0;
+                  $aircraftList[$aircraftKey]['positions'][$timestampKey] =
                   [
                      'latitude'    => $aircraft->lat,
                      'longitude'   => $aircraft->lon,
@@ -130,7 +134,9 @@ function processAircraftExtract($receiver, $fileList)
                      'bearing'     => $result['bearing'],
                      'sector'      => $result['cardinal'],
                      'zone'        => $result['ring'],
+                     'rssi'        => $aircraft->rssi,
                   ];
+                  ksort($aircraftList[$aircraftKey]['positions']);
                }
                else
                {
@@ -220,6 +226,36 @@ function outputAircraftResults($aircraftList)
 }
 
 //
+// calculate track length
+//
+function calculateTrackLength($aircraftList)
+{
+   foreach($aircraftList as $icao => $aircraft)
+   {
+      // initialize the track length for this aircraft
+      $trackLength = 0;
+      // get the list of keys so they can be accessed by a numeric index
+      $positionKeys = array_keys($aircraft['positions']);
+
+      // scan each pair of positions and calculate length
+      for($from = 0, $to = 1;
+          $to < count($positionKeys);
+          $from++, $to++)
+      {
+         // get the from/to positions
+         $fromPos = $aircraft['positions'][$positionKeys[$from]];
+         $toPos   = $aircraft['positions'][$positionKeys[$to]];
+         // calculate and accumulate the distance
+         $trackLength += (int)(getDistance($fromPos['latitude'], $fromPos['longitude'], $toPos['latitude'], $toPos['longitude']) * 60);
+      }
+      // save the tracklength in the aircraftList
+      $aircraftList[$icao]['tracklength'] = $trackLength;
+   }
+
+   return $aircraftList;
+}
+
+//
 // main application code
 //
 
@@ -279,6 +315,8 @@ switch($mode)
       }
       
       $dataset = processAircraftExtract($receiver, $fileList);
+      $dataset = calculateTrackLength($dataset);
+
       //
       // This is a large listing
       //outputAircraftResults($dataset);

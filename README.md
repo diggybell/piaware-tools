@@ -111,5 +111,5 @@ This module contains functions that are useful for working with cardinal directi
 
 This module can be used to convert an ICAO Hex code to a US N-number. (US Aircraft Only)
 
-### polar
+### polar.php
 This module contains the base polar diagram functions. It also contains functions for converting between Polar coordinates (GPS) and Cartesian coordinates (display).

@@ -46,6 +46,30 @@ function getOrderedFileList()
 }
 
 //
+// Validate the minimum altitude for each ring to make sure it is sane
+//
+function isValidAltitude($ring, $altitude)
+{
+   $minimums =
+   [
+      500,     // 50 nm
+      1000,    // 100 nm
+      5000,    // 150 nm
+      10000,   // 200 nm
+      15000,   // 250 nm
+      20000    // 250+ nm
+   ];
+
+   if($altitude < $minimums[$ring])
+   {
+
+      return false;
+   }
+
+   return true;
+}
+
+//
 // process the json history and extract minimum altitude/distance for each sector/zone
 //
 function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
@@ -63,27 +87,27 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
                   isset($aircraft->lat) &&
                   isset($aircraft->lon))
                {
-                  //printf("Adding aircraft data (%s)\n", $aircraft->hex);
                   $result = getDistanceAndBearing($receiver->lat, $receiver->lon, $aircraft->lat, $aircraft->lon);
                   if($aircraft->alt_baro > 0)
                   {
                      if($dataset[$result['cardinal']][$result['ring']]['altitude'] == 0 ||
                         $aircraft->alt_baro < $dataset[$result['cardinal']][$result['ring']]['altitude'])
                      {
-                        $dataset[$result['cardinal']][$result['ring']]['altitude'] = $aircraft->alt_baro;
-                        $dataset[$result['cardinal']][$result['ring']]['distance'] = $result['nm'];
+                        if(isValidAltitude($result['ring'], $aircraft->alt_baro))
+                        {
+                           $dataset[$result['cardinal']][$result['ring']]['altitude'] = $aircraft->alt_baro;
+                           $dataset[$result['cardinal']][$result['ring']]['distance'] = $result['nm'];
+                        }
                      }
                   }
                }
                else
                {
-                  //printf("Skipping empty coordinates for %s\n", $aircraft->hex);
                }
             }
          }
          else
          {
-            //printf("Aircraft not found or not an array\n");
          }
       }
       else
@@ -140,13 +164,11 @@ function processAircraftExtract($receiver, $fileList)
                }
                else
                {
-                  //printf("Skipping empty coordinates for %s\n", $aircraft->hex);
                }
             }
          }
          else
          {
-            //printf("Aircraft not found or not an array\n");
          }
       }
       else

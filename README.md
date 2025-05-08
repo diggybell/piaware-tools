@@ -75,6 +75,11 @@ Add the following line to the file changing the directories where required
 ```
 This will automatically retrieve the history data from your PiAware feeder every 30 minutes and execute reader.php to update the altitude-stats.json file.
 
+You can also execute the reader.php script to update the aircraft-history.json. This can be added to the crontab entry as follows.
+```
+0,30 * * * * cd <your source directory>; scp <user>@<hostname>:/run/dump1090-fa/* data; php reader.php --altitude; php reader.php --aircraft
+```
+
 ## Administration
 There are two options for managing the altitude data based on long term history or daily resets of the data.
 
@@ -91,6 +96,8 @@ If there are multiple invalid entries you can correct them all at once.
 
 Since this utility uses the PiAware history files the invalid altitude will be retained for an hour. I will usually wait an hor before I make the correction.
 
+Note: Changes were added on 2025-05-08 that should prevent invalid altitudes from being used for minimum altitude. See isValidAltitude() in reader.php for details.
+
 ### Daily Reset of Altitude Data
 All that is required to reset the data is to remove altitude-stats.json. This can be done daily using the following entry in crontab to remove the file each night at 23:55.
 ```
@@ -98,7 +105,17 @@ All that is required to reset the data is to remove altitude-stats.json. This ca
 ```
 If you would like to keep a daily history of the data you can use the following line in crontab
 ```
-55 23 * * * cd <your source directory>; mv altitude-stats.json <your history directory>/altitude-history-`data "+\%Y-\%m-\%d".json
+55 23 * * * cd <your source directory>; mv altitude-stats.json <your history directory>/altitude-stats-`data "+\%Y-\%m-\%d"`.json
+```
+
+### Daily Reset of Aircraft History
+All that is required to reset the data is to remove aircraft-history.json. This can be done daily using the following entry in crontab to remove the file each night at 23:55.
+```
+55 23 * * * cd <your source directory>; rm aircraft-history.json
+```
+If you would like to keep a daily history of the data you can use the following line in crontab
+```
+55 23 * * * cd <your source directory>; mv aircraft-history.json <your history directory>/aircraft-history-`data "+\%Y-\%m-\%d"`.json
 ```
 
 ## Re-usable Code

@@ -13,6 +13,33 @@ define('GROUP1', 101711);
 define('GROUP2', 10111);
 
 //
+// global ICAO hex code range for country
+//
+$icaoCountryMap = null;
+
+function getICAOCountry($hexCode)
+{
+    global $icaoCountryMap;
+
+    if($icaoCountryMap === null)
+    {
+        $icaoCountryMap = json_decode(file_get_contents('icao-decode.json'));      
+    }
+
+    $hexCode = '0x' . strtoupper($hexCode);
+    
+    foreach($icaoCountryMap as $index => $country)
+    {
+        if($hexCode >= $country->start && $hexCode <= $country->end)
+        {
+            return $country->country;
+        }
+    }
+
+    return null;
+}
+
+//
 // calculate the suffix (Internal use)
 //
 function icaoSuffix($rem)

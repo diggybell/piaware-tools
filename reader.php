@@ -46,6 +46,30 @@ function getOrderedFileList()
 }
 
 //
+// Validate the minimum altitude for each ring to make sure it is sane
+//
+function isValidAltitude($ring, $altitude)
+{
+   $minimums =
+   [
+      500,     // 50 nm
+      1000,    // 100 nm
+      5000,    // 150 nm
+      10000,   // 200 nm
+      15000,   // 250 nm
+      20000    // 250+ nm
+   ];
+
+   if($altitude < $minimums[$ring])
+   {
+
+      return false;
+   }
+
+   return true;
+}
+
+//
 // process the json history and extract minimum altitude/distance for each sector/zone
 //
 function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
@@ -63,27 +87,27 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
                   isset($aircraft->lat) &&
                   isset($aircraft->lon))
                {
-                  //printf("Adding aircraft data (%s)\n", $aircraft->hex);
                   $result = getDistanceAndBearing($receiver->lat, $receiver->lon, $aircraft->lat, $aircraft->lon);
                   if($aircraft->alt_baro > 0)
                   {
                      if($dataset[$result['cardinal']][$result['ring']]['altitude'] == 0 ||
                         $aircraft->alt_baro < $dataset[$result['cardinal']][$result['ring']]['altitude'])
                      {
-                        $dataset[$result['cardinal']][$result['ring']]['altitude'] = $aircraft->alt_baro;
-                        $dataset[$result['cardinal']][$result['ring']]['distance'] = $result['nm'];
+                        if(isValidAltitude($result['ring'], $aircraft->alt_baro))
+                        {
+                           $dataset[$result['cardinal']][$result['ring']]['altitude'] = $aircraft->alt_baro;
+                           $dataset[$result['cardinal']][$result['ring']]['distance'] = $result['nm'];
+                        }
                      }
                   }
                }
                else
                {
-                  //printf("Skipping empty coordinates for %s\n", $aircraft->hex);
                }
             }
          }
          else
          {
-            //printf("Aircraft not found or not an array\n");
          }
       }
       else
@@ -100,8 +124,6 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
 //
 function processAircraftExtract($receiver, $fileList)
 {
-   $aircraftList = [];
-
    foreach($fileList as $timeStamp => $fileName)
    {
       $content = json_decode(file_get_contents(DATAPATH . $fileName));
@@ -115,12 +137,17 @@ function processAircraftExtract($receiver, $fileList)
                   isset($aircraft->lat) &&
                   isset($aircraft->lon))
                {
-                  //printf("Adding aircraft data (%s)\n", $aircraft->hex);
                   $result = getDistanceAndBearing($receiver->lat, $receiver->lon, $aircraft->lat, $aircraft->lon);
-                  $aircraftList[$aircraft->hex]['icao'] = $aircraft->hex;
-                  $aircraftList[$aircraft->hex]['registry'] = icaoTailNumber($aircraft->hex);
-                  $aircraftList[$aircraft->hex]['category'] = $aircraft->category;
-                  $aircraftList[$aircraft->hex]['positions'][$timeStamp] =
+          
+                  $aircraftKey = strtoupper($aircraft->hex);
+                  $timestampKey = date('Ymd-His', $timeStamp);
+
+                  $aircraftList[$aircraftKey]['icao'] = $aircraftKey;
+                  $aircraftList[$aircraftKey]['registry'] = icaoTailNumber($aircraftKey);
+                  $aircraftList[$aircraftKey]['category'] = $aircraft->category;
+                  $aircraftList[$aircraftKey]['country'] = getICAOCountry($aircraftKey);
+                  $aircraftList[$aircraftKey]['tracklength'] = 0;
+                  $aircraftList[$aircraftKey]['positions'][$timestampKey] =
                   [
                      'latitude'    => $aircraft->lat,
                      'longitude'   => $aircraft->lon,
@@ -131,17 +158,17 @@ function processAircraftExtract($receiver, $fileList)
                      'bearing'     => $result['bearing'],
                      'sector'      => $result['cardinal'],
                      'zone'        => $result['ring'],
+                     'rssi'        => $aircraft->rssi,
                   ];
+                  ksort($aircraftList[$aircraftKey]['positions']);
                }
                else
                {
-                  //printf("Skipping empty coordinates for %s\n", $aircraft->hex);
                }
             }
          }
          else
          {
-            //printf("Aircraft not found or not an array\n");
          }
       }
       else
@@ -221,6 +248,36 @@ function outputAircraftResults($aircraftList)
 }
 
 //
+// calculate track length
+//
+function calculateTrackLength($aircraftList)
+{
+   foreach($aircraftList as $icao => $aircraft)
+   {
+      // initialize the track length for this aircraft
+      $trackLength = 0;
+      // get the list of keys so they can be accessed by a numeric index
+      $positionKeys = array_keys($aircraft['positions']);
+
+      // scan each pair of positions and calculate length
+      for($from = 0, $to = 1;
+          $to < count($positionKeys);
+          $from++, $to++)
+      {
+         // get the from/to positions
+         $fromPos = $aircraft['positions'][$positionKeys[$from]];
+         $toPos   = $aircraft['positions'][$positionKeys[$to]];
+         // calculate and accumulate the distance
+         $trackLength += (int)(getDistance($fromPos['latitude'], $fromPos['longitude'], $toPos['latitude'], $toPos['longitude']) * 60);
+      }
+      // save the tracklength in the aircraftList
+      $aircraftList[$icao]['tracklength'] = $trackLength;
+   }
+
+   return $aircraftList;
+}
+
+//
 // main application code
 //
 
@@ -259,21 +316,29 @@ for($index = 0; $index < getCardinalCount(); $index++)
    $dataset[getCardinalLabel($index)] = $entry;
 }
 
-// pre-load the existing data from previous run
-if(file_exists(ALTITUDE_FILE))
-{
-   $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
-}
-
 switch($mode)
 {
    case 'altitude': 
+      // load the existing data from previous run
+      if(file_exists(ALTITUDE_FILE))
+      {
+         $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
+      }
+      
       $dataset = processCardinalAltitudeExtract($receiver, $fileList, $dataset);
       outputAltitudeResults($dataset);
       file_put_contents(ALTITUDE_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
       break;
    case 'aircraft':
+      // load the existing data from previous run
+      if(file_exists(AIRCRAFT_FILE))
+      {
+         $dataset = json_decode(file_get_contents(AIRCRAFT_FILE), true);
+      }
+      
       $dataset = processAircraftExtract($receiver, $fileList);
+      $dataset = calculateTrackLength($dataset);
+
       //
       // This is a large listing
       //outputAircraftResults($dataset);

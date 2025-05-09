@@ -70,6 +70,27 @@ function isValidAltitude($ring, $altitude)
 }
 
 //
+// create a new dataset for cardinal/zone data
+//
+function initializeCardinalDataset()
+{
+   $dataset = [];
+   $entry = [];
+   
+   // initialize the data set with zero values
+   for($index = 0; $index < getRangeRingCount(); $index++)
+   {
+      $entry[$index] = [ 'altitude' => 0, 'distance' => 0 ];
+   }
+   for($index = 0; $index < getCardinalCount(); $index++)
+   {
+      $dataset[getCardinalLabel($index)] = $entry;
+   }
+
+   return $dataset;
+}
+
+//
 // process the json history and extract minimum altitude/distance for each sector/zone
 //
 function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
@@ -97,6 +118,7 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
                         {
                            $dataset[$result['cardinal']][$result['ring']]['altitude'] = $aircraft->alt_baro;
                            $dataset[$result['cardinal']][$result['ring']]['distance'] = $result['nm'];
+                           $dataset[$result['cardinal']][$result['ring']]['icao']     = $aircraft->hex;
                         }
                      }
                   }
@@ -283,7 +305,7 @@ function calculateTrackLength($aircraftList)
 
 // get command line options
 $shortOpts = '';
-$longOpts = [ 'altitude', 'aircraft'];
+$longOpts = [ 'altitude', 'aircraft', 'archive'];
 $opts = getopt($shortOpts, $longOpts);
 if(isset($opts['altitude']))
 {
@@ -292,6 +314,10 @@ if(isset($opts['altitude']))
 elseif(isset($opts['aircraft']))
 {
    $mode = 'aircraft';
+}
+elseif(isset($opts['archive']))
+{
+   $mode = 'archive';
 }
 else
 {
@@ -303,19 +329,6 @@ else
 $receiver = getReceiver();
 $fileList = getOrderedFileList();
 
-$dataset = [];
-$entry = [];
-
-// initialize the data set with zero values
-for($index = 0; $index < getRangeRingCount(); $index++)
-{
-   $entry[$index] = [ 'altitude' => 0, 'distance' => 0 ];
-}
-for($index = 0; $index < getCardinalCount(); $index++)
-{
-   $dataset[getCardinalLabel($index)] = $entry;
-}
-
 switch($mode)
 {
    case 'altitude': 
@@ -323,6 +336,10 @@ switch($mode)
       if(file_exists(ALTITUDE_FILE))
       {
          $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
+      }
+      else
+      {
+         $dataset = initializeCardinalDataset();
       }
       
       $dataset = processCardinalAltitudeExtract($receiver, $fileList, $dataset);
@@ -343,4 +360,14 @@ switch($mode)
       // This is a large listing
       //outputAircraftResults($dataset);
       file_put_contents(AIRCRAFT_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
+      break;
+   case 'archive':
+      $fileName = str_replace('.json', '', AIRCRAFT_FILE);
+      $fileName = $fileName . '-' . date('Y-m-d') . '.json';
+      rename(AIRCRAFT_FILE, $fileName);
+
+      $fileName = str_replace('.json', '', ALTITUDE_FILE);
+      $fileName = $fileName . '-' . date('Y-m-d') . '.json';
+      rename(ALTITUDE_FILE, $fileName);
+      break;
 }

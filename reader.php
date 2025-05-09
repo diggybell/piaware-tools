@@ -299,6 +299,20 @@ function calculateTrackLength($aircraftList)
    return $aircraftList;
 }
 
+function usage()
+{
+?>
+PiAware-Tools - Data Management Utility
+Copyright 2025 (c) - Diggy Bell
+
+Options
+   --altitude  -  Process PiAware history files for lowest altitude in Cardinal/Range
+   --aircraft  -  Process PiAware history files to build aircraft history
+   --archive   -  Move current altitude and aircraft history to archive
+   --help      -  Display this help
+
+<?php
+}
 //
 // main application code
 //
@@ -319,9 +333,15 @@ elseif(isset($opts['archive']))
 {
    $mode = 'archive';
 }
+elseif(isset($opts['help']))
+{
+   usage();
+   exit;
+}
 else
 {
-   printf("Invalid option. --altitude or --aircraft required.\n");
+   printf("Invalid option\n");
+   usage();
    exit;
 }
 

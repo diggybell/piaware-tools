@@ -1,15 +1,15 @@
 <?php
 
-include_once('config.php');
-include_once('cardinals.php');
-include_once('icao.php');
+include_once('../lib/config.php');
+include_once('../lib/cardinals.php');
+include_once('../lib/icao.php');
 
 //
 // get receiver information from receiver.json
 //
 function getReceiver()
 {
-   $receiver = json_decode(file_get_contents(DATAPATH . 'receiver.json'));
+   $receiver = json_decode(file_get_contents(RECEIVER_FILE));
    return $receiver;
 }
 
@@ -70,6 +70,27 @@ function isValidAltitude($ring, $altitude)
 }
 
 //
+// create a new dataset for cardinal/zone data
+//
+function initializeCardinalDataset()
+{
+   $dataset = [];
+   $entry = [];
+   
+   // initialize the data set with zero values
+   for($index = 0; $index < getRangeRingCount(); $index++)
+   {
+      $entry[$index] = [ 'altitude' => 0, 'distance' => 0 ];
+   }
+   for($index = 0; $index < getCardinalCount(); $index++)
+   {
+      $dataset[getCardinalLabel($index)] = $entry;
+   }
+
+   return $dataset;
+}
+
+//
 // process the json history and extract minimum altitude/distance for each sector/zone
 //
 function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
@@ -97,6 +118,7 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
                         {
                            $dataset[$result['cardinal']][$result['ring']]['altitude'] = $aircraft->alt_baro;
                            $dataset[$result['cardinal']][$result['ring']]['distance'] = $result['nm'];
+                           $dataset[$result['cardinal']][$result['ring']]['icao']     = $aircraft->hex;
                         }
                      }
                   }
@@ -277,13 +299,27 @@ function calculateTrackLength($aircraftList)
    return $aircraftList;
 }
 
+function usage()
+{
+?>
+PiAware-Tools - Data Management Utility
+Copyright 2025 (c) - Diggy Bell
+
+Options
+   --altitude  -  Process PiAware history files for lowest altitude in Cardinal/Range
+   --aircraft  -  Process PiAware history files to build aircraft history
+   --archive   -  Move current altitude and aircraft history to archive
+   --help      -  Display this help
+
+<?php
+}
 //
 // main application code
 //
 
 // get command line options
 $shortOpts = '';
-$longOpts = [ 'altitude', 'aircraft'];
+$longOpts = [ 'altitude', 'aircraft', 'archive'];
 $opts = getopt($shortOpts, $longOpts);
 if(isset($opts['altitude']))
 {
@@ -293,28 +329,25 @@ elseif(isset($opts['aircraft']))
 {
    $mode = 'aircraft';
 }
+elseif(isset($opts['archive']))
+{
+   $mode = 'archive';
+}
+elseif(isset($opts['help']))
+{
+   usage();
+   exit;
+}
 else
 {
-   printf("Invalid option. --altitude or --aircraft required.\n");
+   printf("Invalid option\n");
+   usage();
    exit;
 }
 
 // setup initial data
 $receiver = getReceiver();
 $fileList = getOrderedFileList();
-
-$dataset = [];
-$entry = [];
-
-// initialize the data set with zero values
-for($index = 0; $index < getRangeRingCount(); $index++)
-{
-   $entry[$index] = [ 'altitude' => 0, 'distance' => 0 ];
-}
-for($index = 0; $index < getCardinalCount(); $index++)
-{
-   $dataset[getCardinalLabel($index)] = $entry;
-}
 
 switch($mode)
 {
@@ -323,6 +356,10 @@ switch($mode)
       if(file_exists(ALTITUDE_FILE))
       {
          $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
+      }
+      else
+      {
+         $dataset = initializeCardinalDataset();
       }
       
       $dataset = processCardinalAltitudeExtract($receiver, $fileList, $dataset);
@@ -343,4 +380,14 @@ switch($mode)
       // This is a large listing
       //outputAircraftResults($dataset);
       file_put_contents(AIRCRAFT_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
+      break;
+   case 'archive':
+      $fileName = str_replace('.json', '', AIRCRAFT_FILE);
+      $fileName = $fileName . '-' . date('Y-m-d') . '.json';
+      rename(AIRCRAFT_FILE, $fileName);
+
+      $fileName = str_replace('.json', '', ALTITUDE_FILE);
+      $fileName = $fileName . '-' . date('Y-m-d') . '.json';
+      rename(ALTITUDE_FILE, $fileName);
+      break;
 }

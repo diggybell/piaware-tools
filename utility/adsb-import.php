@@ -9,7 +9,7 @@ include_once('../lib/icao.php');
 //
 function getReceiver()
 {
-   $receiver = json_decode(file_get_contents(DATAPATH . 'receiver.json'));
+   $receiver = json_decode(file_get_contents(RECEIVER_FILE));
    return $receiver;
 }
 

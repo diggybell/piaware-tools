@@ -23,7 +23,7 @@ function getICAOCountry($hexCode)
 
     if($icaoCountryMap === null)
     {
-        $icaoCountryMap = json_decode(file_get_contents('icao-decode.json'));      
+        $icaoCountryMap = json_decode(file_get_contents(ICAOHEX_FILE));      
     }
 
     $hexCode = '0x' . strtoupper($hexCode);

@@ -1,8 +1,8 @@
 <?php
 
-include_once('config.php');
-include_once('cardinals.php');
-include_once('icao.php');
+include_once('../lib/config.php');
+include_once('../lib/cardinals.php');
+include_once('../lib/icao.php');
 
 //
 // get receiver information from receiver.json

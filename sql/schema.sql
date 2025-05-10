@@ -10,6 +10,9 @@ CREATE TABLE aircraft
     adsb_category           VARCHAR(2),
     register_country        VARCHAR(30),
 
+    create_date             DATETIME        DEFAULT NULL,
+    modify_date             DATETIME        DEFAULT NULL,
+
     PRIMARY KEY(aircraft_seq)
 ) ENGINE=InnoDB;
 
@@ -25,12 +28,17 @@ CREATE TABLE flight
     first_seen              DATETIME,
     last_seen               DATETIME,
 
+    create_date             DATETIME        DEFAULT NULL,
+    modify_date             DATETIME        DEFAULT NULL,
+
     PRIMARY KEY(flight_seq),
     FOREIGN KEY(aircraft_seq) REFERENCES aircraft(aircraft_seq)
 ) ENGINE=InnoDB;
 
 CREATE INDEX aircraft_flight_ndx
     ON flight(aircraft_seq);
+CREATE INDEX flight_start_ndx
+    ON flight(aircraft_seq, first_seen);
 
 CREATE TABLE flight_track
 (
@@ -47,7 +55,9 @@ CREATE TABLE flight_track
     cardinal                VARCHAR(3),
     ring                    INTEGER,
     rssi                    NUMERIC(5,1),
-    partition_key           INTEGER         DEFAULT MONTH(NOW()),
+
+    create_date             DATETIME        DEFAULT NULL,
+    modify_date             DATETIME        DEFAULT NULL,
 
     PRIMARY KEY(track_seq),
     FOREIGN KEY(flight_seq) REFERENCES flight(flight_seq)
@@ -55,3 +65,5 @@ CREATE TABLE flight_track
 
 CREATE INDEX flight_track_ndx
     ON flight_track(flight_seq);
+CREATE INDEX flight_time_ndx
+    ON flight_track(flight_seq, time_stamp);

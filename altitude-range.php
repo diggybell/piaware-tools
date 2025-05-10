@@ -1,8 +1,8 @@
 <?php
 
-include_once('config.php');
-include_once('cardinals.php');
-include_once('polar.php');
+include_once('lib/config.php');
+include_once('lib/cardinals.php');
+include_once('lib/polar.php');
 
 //
 // populate the polar map with the altitude/distance data

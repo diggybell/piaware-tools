@@ -27,6 +27,7 @@ function updateAircraft($db, $aircraft)
         $recAircraft->set('icao_hex', $aircraft['icao']);
         $recAircraft->set('n_number', $aircraft['registry']);
         $recAircraft->set('adsb_category', $aircraft['category']);
+        $recAircraft->set('register_country', $aircraft['country']);
 
         if($recAircraft->get('aircraft_seq') == 0)
         {

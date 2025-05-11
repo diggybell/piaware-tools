@@ -340,7 +340,7 @@ elseif(isset($opts['help']))
 }
 else
 {
-   printf("Invalid option\n");
+   printf("Error: Invalid option\n");
    usage();
    exit;
 }

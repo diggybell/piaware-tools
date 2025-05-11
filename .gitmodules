@@ -1,0 +1,3 @@
+[submodule "DigTech"]
+	path = DigTech
+	url = git@github.com:diggybell/DigTech.git

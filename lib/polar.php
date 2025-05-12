@@ -1,10 +1,17 @@
 <?php
 
+/**
+   \file polar.php
+   \ingroup Lib
+   \brief A collection of functions and data for working with polar coordinates
+*/
+
 include_once('cardinals.php');
 
-// mapping altitude to colors
-//
-// Note: each element is limited to 51-255 which results in 204 gradients between each band
+/**
+   \brief Mapping altitude to colors
+   \details Note: each element is limited to 51-255 which results in 204 gradients between each band
+*/
 $colorMap =
 [
   [ 'min' =>     1, 'max' =>  4000, 'operation' => 'g+', 'red' => 255, 'green' =>  51, 'blue' =>  51 ],
@@ -14,9 +21,11 @@ $colorMap =
   [ 'min' => 30001, 'max' => 45000, 'operation' => 'r+', 'red' =>  51, 'green' =>  51, 'blue' => 255 ]
 ];
 
-//
-// determine the display color based on altitude
-//
+/**
+   \brief Determine the display color based on altitude
+   \param $altitude The altitude to use for retrieving color
+   \returns The color based on the altitude
+*/
 function altitudeColor($altitude)
 {
    global $colorMap;
@@ -83,9 +92,9 @@ function altitudeColor($altitude)
    return ($red << 16 | $green << 8 | $blue);
 }
 
-//
-// create the altitude legend
-//
+/**
+   \brief Create the altitude legend as HTML text
+*/
 function altitudeLegend()
 {
    $row1 = '';
@@ -109,9 +118,11 @@ function altitudeLegend()
    return sprintf("<table cdllpadding=\"2\" cellspacing=\"1\">\n%s%s</table>\n", $row1, $row2);
 }
 
-//
-// convert coordinates from polar to cartesian
-//
+/**
+   \brief convert coordinates from polar to cartesian
+   \param $coord Contains theta and distance for polar coordinate
+   \returns Cartesian coordinate (x,y) for the polar coordinate
+*/
 function polar2cart($coord)
 {
    // rotate the plot by 101.25 degrees so that North is at the top
@@ -122,9 +133,15 @@ function polar2cart($coord)
    return [ 'x' => $x, 'y' => $y ];
 }
 
-//
-// scale a value from one range to another
-//
+/**
+   \brief Scale a value from one range to another
+   \param $value The value to scale
+   \param $fromLow The beginning of the source range
+   \param $fromHigh The end of the source range
+   \param $toLow The beginning of the target range
+   \param $toLow The end of the target range
+   \returns The value scaled from the source range to the target range
+*/
 function scaleRangeValue($value, $fromLow, $fromHigh, $toLow, $toHigh)
 {
    $fromRange = $fromHigh - $fromLow;
@@ -137,9 +154,12 @@ function scaleRangeValue($value, $fromLow, $fromHigh, $toLow, $toHigh)
    return $tmpValue + $toLow;
 }
 
-//
-// create the polar map with all of the sectors
-//
+/**
+   \brief Create the polar map with all of the sectors
+   \param $width The width of each band (default 50)
+   \param $bands The number of bands to create (default 6)
+   \returns Initialized polar map
+*/
 function createPolarMap($width=50, $bands=6)
 {
    $result = [];
@@ -161,9 +181,15 @@ function createPolarMap($width=50, $bands=6)
    return $result;
 }
 
-//
-// output the graph as SVG
-//
+/**
+   \brief Output the graph as SVG
+   \param $content String containing graph-specific content
+   \param $centerX The X coordinate for the center of the graph in the viewport
+   \param $centerY The Y coordinate for the center of the graph in the viewport
+   \param $width The width of each ring (default 50)
+   \param $rings The number of rings (default 6)
+   \returns String containing markup for the complete SVG
+*/
 function createPolarSVG($content, $centerX, $centerY, $width=50, $rings=6)
 {
    $ret = '';

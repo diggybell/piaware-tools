@@ -1,22 +1,27 @@
 <?php
 
-//
-// Constants used by library
-//
-define('ALLCHARS', 35);
-define('ALPHAONLY', 25);
-define('BASE9', "123456789");
-define('BASE10', "0123456789");
-define('BASE34', "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789");
-define('ICAO_OFFSET', 0xA00001);
-define('GROUP1', 101711);
-define('GROUP2', 10111);
+/**
+    \file icao.php
+    \ingroup Lib
+    \brief A collections of functions for working in ICAO Hex Codes
+ */
 
-//
-// global ICAO hex code range for country
-//
-$icaoCountryMap = null;
+define('ALLCHARS', 35);                                     ///< Total number of available characters
+define('ALPHAONLY', 25);                                    ///< Number of alpha characters
+define('BASE9', "123456789");                               ///< Numbers 1-9 (first digit of N-number)
+define('BASE10', "0123456789");                             ///< Numbers 0-9 (2-3) digits of N-number)
+define('BASE34', "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789");     ///< Letters A-Z (except 'I' and 'O') and numbers 0-9
+define('ICAO_OFFSET', 0xA00001);                            ///< Start of ICAO allocations for US aircraft
+define('GROUP1', 101711);                                   ///< Group 1 to control conversion between ICAO/N-number
+define('GROUP2', 10111);                                    ///< Group 2 to control conversion between ICAO/N-number
 
+$icaoCountryMap = null; ///< global ICAO hex code range for country
+
+/**
+    \brief Get the country from the ICAO Hex code
+    \param $hexCode The ICAO Hex code to translate
+    \returns Name of country where aircraft is registered
+*/
 function getICAOCountry($hexCode)
 {
     global $icaoCountryMap;
@@ -39,9 +44,11 @@ function getICAOCountry($hexCode)
     return null;
 }
 
-//
-// calculate the suffix (Internal use)
-//
+/**
+    \brief Internal method to calculate the suffix (Internal use)
+    \param $rem The remainder during conversion between ICAO <-> N-number
+    \returns The suffix to be appended to the N-nmber
+*/
 function icaoSuffix($rem)
 {
     if($rem == 0)
@@ -72,9 +79,10 @@ function icaoSuffix($rem)
     return $suf;
 }
 
-//
-// encode the suffix (Internal use)
-//
+/**
+    \brief Encode the suffix (Internal use)
+    \param $suf The suffix from the N-number to be encoded to hex
+*/
 function encodeSuffix($suf)
 {
     // produces a remainder from a 0 - 2 digit suffix.
@@ -104,9 +112,11 @@ function encodeSuffix($suf)
     }
 }
 
-//
-// convert ICAO hex code to N-number
-//
+/**
+    \brief Convert ICAO hex code to N-number
+    \param $hexCode The ICAO Hex code to convert to N-number
+    \returns The US N-number for the ICAO Hex code if it is a US registered aircraft
+*/
 function icaoTailNumber($hexCode)
 {
     $tailNumber = 0;
@@ -159,6 +169,11 @@ function icaoTailNumber($hexCode)
 //
 // convert an N-number to ICAO hex code
 //
+/**
+    \brief Convert an N-number to ICAO Hex code
+    \param $tail The N-number to be converted to ICAO Hex code
+    \returns The ICAO Hex code for the N-number that was passed
+*/
 function icaoHexCode($tail)
 {
     $d2 = 0;

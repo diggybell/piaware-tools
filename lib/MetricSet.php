@@ -2,7 +2,7 @@
 
 include_once('Metric.php');
 
-/*
+/**
     \class MetricSet
     \brief This object encapsulates a set of metrics to be manipulated together
     \ingroup Lib

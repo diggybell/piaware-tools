@@ -1,6 +1,7 @@
 /**
     \file triggers.sql
     \brief Defines audit triggers for PiAware Tools database tables
+    \ingroup Intel
 */
 
 USE piaware;

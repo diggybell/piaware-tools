@@ -81,7 +81,7 @@ function getCSVSchema($basePath, $inputFile)
     return null;
 }
 
-/*
+/**
     \brief Generate the SQL to create the table
     \param $schema The table name a column list to create SQL for
 */
@@ -213,80 +213,82 @@ Copyright 2025 (c) - Diggy Bell
 <?php
 }
 
-//
-// main application code
-//
+/**
+    \brief Main entry point
+    \param $opts Command line parameters
+*/
+function main($opts)
+{
+    $schemaFlag = false;
+    $importFlag = false;
+    $truncateFlag = false;
+    $helpFlag = false;
+    $basePath = '';
+    $inputFile = '';
+    $schema = [];
 
-$inputFiles = 
-[
-    'MASTER.txt',
-    'RESERVED.txt',
-//    'DEREG.txt',
-    'ACFTREF.txt',
-    'ENGINE.txt'
-];
-
-$schemaFlag = false;
-$importFlag = false;
-$truncateFlag = false;
-$helpFlag = false;
-
-$basePath = '';
-$inputFile = '';
-
-$shortOpts = '';
-$longOpts = [ 'schema', 'import', 'truncate', 'directory:', 'file:', 'help'];
-$opts = getopt($shortOpts, $longOpts);
-
-if(isset($opts['schema']))
-{
-    $schemaFlag = true;
-}
-if(isset($opts['import']))
-{
-    $importFlag = true;
-}
-if(isset($opts['truncate']) && !$schemaFlag)
-{
-    $truncateFlag = true;
-}
-if(isset($opts['directory']))
-{
-    $basePath = $opts['directory'];
-}
-if(isset($opts['file']))
-{
-    $inputFile = $opts['file'];
-}
-if(isset($opts['help']))
-{
-    $helpFlag = true;
-}
-
-if($helpFlag || strlen($inputFile) == 0 || (!$schemaFlag && !$importFlag && !$truncateFlag))
-{
-    if(strlen($inputFile) == 0)
+    if(isset($opts['schema']))
     {
-        printf("Error: You must provide a valid input file name (--file)\n");
+        $schemaFlag = true;
     }
-    if(!$schemaFlag && !$importFlag && !$truncateFlag)
+    if(isset($opts['import']))
     {
-        printf("Error: You must include one of these flags (--schema, --import, --truncate)\n");
+        $importFlag = true;
     }
-    usage();
-    exit;
+    if(isset($opts['truncate']) && !$schemaFlag)
+    {
+        $truncateFlag = true;
+    }
+    if(isset($opts['directory']))
+    {
+        $basePath = $opts['directory'];
+    }
+    if(isset($opts['file']))
+    {
+        $inputFile = $opts['file'];
+    }
+    if(isset($opts['help']))
+    {
+        $helpFlag = true;
+    }
+
+    if($helpFlag || strlen($inputFile) == 0 || (!$schemaFlag && !$importFlag && !$truncateFlag))
+    {
+        if(strlen($inputFile) == 0)
+        {
+            printf("Error: You must provide a valid input file name (--file)\n");
+        }
+        if(!$schemaFlag && !$importFlag && !$truncateFlag)
+        {
+            printf("Error: You must include one of these flags (--schema, --import, --truncate)\n");
+        }
+        usage();
+        exit;
+    }
+
+    $schema = getCSVSchema($basePath, $inputFile);
+    if($schemaFlag)
+    {
+        generateSchema($schema);
+    }
+    if($truncateFlag)
+    {
+        generateTruncate($inputFile);
+    }
+    if($importFlag)
+    {
+        generateImport($schema, $basePath, $inputFile);
+    }
 }
 
-$schema = getCSVSchema($basePath, $inputFile);
-if($schemaFlag)
-{
-    generateSchema($schema);
-}
-if($truncateFlag)
-{
-    generateTruncate($inputFile);
-}
-if($importFlag)
-{
-    generateImport($schema, $basePath, $inputFile);
-}
+$shortOpts = '';            ///< Short command line options (Not supoorted)
+$longOpts = [
+    'schema',
+    'import',
+    'truncate',
+    'directory:',
+    'file:',
+    'help'];                ///< Long command line options
+$opts = getopt($shortOpts, $longOpts);///< Command line options
+
+main($opts);

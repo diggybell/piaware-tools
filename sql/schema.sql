@@ -1,6 +1,7 @@
 /**
     \file schema.sql
     \brief Defines PiAware Tools database tables
+    \ingroup Intel
 */
 
 DROP DATABASE IF EXISTS piaware;

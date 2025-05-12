@@ -46,13 +46,13 @@ function updateAircraft($db, $aircraft)
         if($recAircraft->get('aircraft_seq') == 0)
         {
             $ret = $recAircraft->insert();
-            $statistics['flight-insert']++;
+            $statistics['aircraft-insert']++;
             //Logger::log("Inserted aircraft %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
         }
         else
         {
             $ret = $recAircraft->update();
-            $statistics['flight-update']++;
+            $statistics['aircraft-update']++;
             //Logger::log("Updated aircraft %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
         }
 
@@ -65,39 +65,43 @@ function updateAircraft($db, $aircraft)
     return $ret;
 }
 
-//
-// main application code
-//
-
-$cfg = getGlobalConfiguration();
-
-$db = new MyDB\Connection();
-
-$config = $cfg->getSection('db-piaware');
-$db->configure($config);
-
-$statistics = [];
-
-if($db->connect())
+/**
+    \brief Main entry point
+*/
+function main()
 {
-    $aircraftList = json_decode(file_get_contents('../aircraft-history.json'), true);
-    foreach($aircraftList as $icao => $aircraft)
-    {
-        Logger::log("Processing %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
-        if(strlen($aircraft['icao']))
-        {
-            $ret = updateAircraft($db, $aircraft);
-            if($ret)
-            {
+    $cfg = getGlobalConfiguration();
+    $db = new MyDB\Connection();
+    $config = $cfg->getSection('db-piaware');
+    $db->configure($config);
+    $aircraftList = [];
 
+    if($db->connect())
+    {
+        $aircraftList = json_decode(file_get_contents('../aircraft-history.json'), true);
+        foreach($aircraftList as $icao => $aircraft)
+        {
+            Logger::log("Processing %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
+            if(strlen($aircraft['icao']) && $aircraft['icao'][0] != '~')
+            {
+                $ret = updateAircraft($db, $aircraft);
+                if($ret)
+                {
+
+                }
+                $statistics['aircraft-processed']++;
             }
-            $statistics['aircraft-processed']++;
         }
     }
+    else
+    {
+        Logger::error("Unable to open database connection\n");
+    }
+
 }
-else
-{
-    Logger::error("Unable to open database connection\n");
-}
+
+$statistics = [];       ///< Global statistics
+
+main();
 
 print_r($statistics);

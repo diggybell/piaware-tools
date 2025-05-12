@@ -1,0 +1,23 @@
+/**
+\mainpage PiAware Tools
+\section sec_intro Introduction
+PiAware Tools is a collection of utilities and database scripts that can be used to capture and catalog all of the aircraft
+being seen by your receiver. The tools also include utilities for retrieving and loading the FAA Registration database. This 
+allows relating data between all of the tables to allow deeper analysis of the actual traffic patterns.
+\section sec_prerequisites Prerequisites
+\subsection soft_prereq Required Software
+\li GNU/Linux
+\li PHP 7.x or later
+\li MySQL 5.0 or later
+\subsection skills_prereq Required Skills
+\li Object-oriented PHP
+\li SQL
+\section sec_legal Legal Information
+\author Diggy Bell
+
+\defgroup Lib Re-usable Libraries
+\defgroup ADSB ADS-B Data Utilities
+\defgroup PiAwareTools PiAware Tools Data Utilities
+\defgroup Intel Data Analysis and Graphs
+
+*/

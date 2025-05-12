@@ -1,12 +1,20 @@
 <?php
 
+/**
+   \file altitude-range.php
+   \brief Creates the Altitude Range graph and HTML table
+   \ingroup Intel
+*/
+
 include_once('lib/config.php');
 include_once('lib/cardinals.php');
 include_once('lib/polar.php');
 
-//
-// populate the polar map with the altitude/distance data
-//
+/**
+   \brief Populate the polar map with the altitude/distance data
+   \param $map The polar data set to be populated
+   \param $dataset The calculated minimum altitudes
+*/
 function populateAltitudeMap(&$map, $dataset)
 {
    foreach($map as $cardinal => $sector)
@@ -20,9 +28,14 @@ function populateAltitudeMap(&$map, $dataset)
    }
 }
 
-//
-// generate the SVG code for the chart
-//
+/**
+   \brief Generate the SVG code for the chart
+   \param $map The polar data set to be mapped
+   \param $centerX The center X coordinate
+   \param $centerY The center Y coordinate
+   \param $width The width of the rings on the chart
+   \returns String containing SVG content for the polar chart
+*/
 function plotAltitudeChart($map, $centerX, $centerY, $width=50)
 {
    $ret = '';
@@ -56,9 +69,10 @@ function plotAltitudeChart($map, $centerX, $centerY, $width=50)
    return $ret;
 }
 
-//
-// output table containing altitude values
-//
+/**
+   \brief Output table containing altitude values
+   \param $map The polar data set to be output
+*/
 function altitudeTable($map)
 {
    $ret = '';

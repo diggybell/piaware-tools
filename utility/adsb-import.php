@@ -1,21 +1,29 @@
 <?php
 
+/**
+   \file adsb-import.php
+   \brief This script builds the altitude and aircraft history from the PiAware feeder's JSON data
+   \ingroup ADSB
+*/
+
 include_once('../lib/config.php');
 include_once('../lib/cardinals.php');
 include_once('../lib/icao.php');
 
-//
-// get receiver information from receiver.json
-//
+/**
+   \brief Get receiver information from receiver.json
+   \returns Object with receiver data including lat/lon for the receiver
+*/
 function getReceiver()
 {
    $receiver = json_decode(file_get_contents(RECEIVER_FILE));
    return $receiver;
 }
 
-//
-// get the list of history files and order them by timestamp before processing
-//
+/**
+   \brief Get the list of history files and order them by timestamp before processing
+   \returns Array containing a list of the JSON history files sorted by the timestap contained in each file
+*/
 function getOrderedFileList()
 {
    $fileList = [];
@@ -45,9 +53,12 @@ function getOrderedFileList()
    return $fileList;
 }
 
-//
-// Validate the minimum altitude for each ring to make sure it is sane
-//
+/**
+   \brief Validate the minimum altitude for each ring to make sure it is sane
+   \param $ring The range ring the altitude was seen in
+   \param $altitude The altitude being validated
+   \returns Whether or not the altitude is above a 'sane' minimum (see average-altitudes.php)
+*/
 function isValidAltitude($ring, $altitude)
 {
    $minimums =
@@ -69,9 +80,10 @@ function isValidAltitude($ring, $altitude)
    return true;
 }
 
-//
-// create a new dataset for cardinal/zone data
-//
+/**
+   \brief Create a new dataset for cardinal/zone data
+   \returns An initialized Cardinal dataset
+*/
 function initializeCardinalDataset()
 {
    $dataset = [];
@@ -90,9 +102,13 @@ function initializeCardinalDataset()
    return $dataset;
 }
 
-//
-// process the json history and extract minimum altitude/distance for each sector/zone
-//
+/**
+   \brief Process the json history and extract minimum altitude/distance for each sector/zone into dataset
+   \param $receiver Information on the PiAware receiver
+   \param $fileList The sorted list of PiAware history files
+   \param $dataset An initialized or previously loaded polar dataset
+   \returns The polar dataset populated with the minimum altitude values
+*/
 function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
 {
    foreach($fileList as $timeStamp => $fileName)
@@ -141,9 +157,12 @@ function processCardinalAltitudeExtract($receiver, $fileList, $dataset)
    return $dataset;
 }
 
-//
-// process the json history and extract aircraft and position information
-//
+/**
+   \brief Process the json history and extract aircraft and position information
+   \param $receiver Information on the PiAware receiver
+   \param $fileList The sorted list of PiAware history files
+   \returns A list of all aircraft containing a list of positions
+*/
 function processAircraftExtract($receiver, $fileList)
 {
    foreach($fileList as $timeStamp => $fileName)
@@ -202,9 +221,10 @@ function processAircraftExtract($receiver, $fileList)
    return $aircraftList;
 }
 
-//
-// output the results of analyzing positions seen by cardinal direction, altitude, and distance
-//
+/**
+   \brief Output the results of analyzing positions seen by cardinal direction, altitude, and distance
+   \param $dataset A polar data set populated with minimum altitude data
+*/
 function outputAltitudeResults($dataset)
 {
    $table = [];
@@ -239,9 +259,10 @@ function outputAltitudeResults($dataset)
    }
 }
 
-//
-// output the aircraft listing
-//
+/**
+   \brief Output the aircraft listing
+   \brief $aircraftList Array of aircraft and positions
+*/
 function outputAircraftResults($aircraftList)
 {
    foreach($aircraftList as $aircraft)
@@ -269,10 +290,12 @@ function outputAircraftResults($aircraftList)
    }
 }
 
-//
-// calculate track length
-//
-function calculateTrackLength($aircraftList)
+/**
+   \brief Calculate track length
+   \param $aircraftList A list of aircraft and positions
+   \returns List of aircraft updated with track lengths for each aircraft
+*/
+function calculateFullTrackLength($aircraftList)
 {
    foreach($aircraftList as $icao => $aircraft)
    {
@@ -299,6 +322,9 @@ function calculateTrackLength($aircraftList)
    return $aircraftList;
 }
 
+/**
+   \brief Display usage and help information
+*/
 function usage()
 {
 ?>
@@ -313,81 +339,107 @@ Options
 
 <?php
 }
-//
-// main application code
-//
 
+/**
+    \brief Main entry point
+    \param Command line parameters
+*/
+function main($opts)
+{
+   // load external data
+   $receiver = getReceiver();
+   $fileList = getOrderedFileList();
+   $reportFlag = false;
+   $mode = '';
+
+   if(isset($opts['altitude']))
+   {
+      $mode = 'altitude';
+   }
+   elseif(isset($opts['aircraft']))
+   {
+      $mode = 'aircraft';
+   }
+   elseif(isset($opts['archive']))
+   {
+      $mode = 'archive';
+   }
+   elseif(isset($opts['help']))
+   {
+      usage();
+      exit;
+   }
+   else
+   {
+      printf("Error: Invalid option\n");
+      usage();
+      exit;
+   };
+
+   if(isset($opts['report']))
+   {
+      $reportFlag = true;
+   }
+
+   switch($mode)
+   {
+      case 'altitude': 
+         // load the existing data from previous run
+         if(file_exists(ALTITUDE_FILE))
+         {
+            $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
+         }
+         else
+         {
+            $dataset = initializeCardinalDataset();
+         }
+         
+         $dataset = processCardinalAltitudeExtract($receiver, $fileList, $dataset);
+         if($reportFlag)
+         {
+            outputAltitudeResults($dataset);
+         }
+         file_put_contents(ALTITUDE_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
+         break;
+      case 'aircraft':
+         // load the existing data from previous run
+         if(file_exists(AIRCRAFT_FILE))
+         {
+            $dataset = json_decode(file_get_contents(AIRCRAFT_FILE), true);
+         }
+         
+         $dataset = processAircraftExtract($receiver, $fileList);
+         $dataset = calculateFullTrackLength($dataset);
+
+         //
+         // This is a large listing
+         if($reportFlag)
+         {
+            outputAircraftResults($dataset);
+         }
+         file_put_contents(AIRCRAFT_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
+         break;
+      case 'archive':
+         $fileName = str_replace('.json', '', AIRCRAFT_FILE);
+         $fileName = $fileName . '-' . date('Y-m-d') . '.json';
+         rename(AIRCRAFT_FILE, $fileName);
+
+         $fileName = str_replace('.json', '', ALTITUDE_FILE);
+         $fileName = $fileName . '-' . date('Y-m-d') . '.json';
+         rename(ALTITUDE_FILE, $fileName);
+         break;
+   }
+}
 // get command line options
-$shortOpts = '';
-$longOpts = [ 'altitude', 'aircraft', 'archive'];
+$shortOpts = '';                    ///< Short command line parameters (not supported)
+$longOpts = [
+   'altitude',
+   'aircraft',
+   'archive',
+   'report',
+   'help'
+];                                  ///< Long command line parameters
+$opts = [];                         ///< Options from command line
 $opts = getopt($shortOpts, $longOpts);
-if(isset($opts['altitude']))
-{
-   $mode = 'altitude';
-}
-elseif(isset($opts['aircraft']))
-{
-   $mode = 'aircraft';
-}
-elseif(isset($opts['archive']))
-{
-   $mode = 'archive';
-}
-elseif(isset($opts['help']))
-{
-   usage();
-   exit;
-}
-else
-{
-   printf("Error: Invalid option\n");
-   usage();
-   exit;
-}
 
-// setup initial data
-$receiver = getReceiver();
-$fileList = getOrderedFileList();
-
-switch($mode)
-{
-   case 'altitude': 
-      // load the existing data from previous run
-      if(file_exists(ALTITUDE_FILE))
-      {
-         $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
-      }
-      else
-      {
-         $dataset = initializeCardinalDataset();
-      }
-      
-      $dataset = processCardinalAltitudeExtract($receiver, $fileList, $dataset);
-      outputAltitudeResults($dataset);
-      file_put_contents(ALTITUDE_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
-      break;
-   case 'aircraft':
-      // load the existing data from previous run
-      if(file_exists(AIRCRAFT_FILE))
-      {
-         $dataset = json_decode(file_get_contents(AIRCRAFT_FILE), true);
-      }
-      
-      $dataset = processAircraftExtract($receiver, $fileList);
-      $dataset = calculateTrackLength($dataset);
-
-      //
-      // This is a large listing
-      //outputAircraftResults($dataset);
-      file_put_contents(AIRCRAFT_FILE, json_encode($dataset, JSON_PRETTY_PRINT));
-      break;
-   case 'archive':
-      $fileName = str_replace('.json', '', AIRCRAFT_FILE);
-      $fileName = $fileName . '-' . date('Y-m-d') . '.json';
-      rename(AIRCRAFT_FILE, $fileName);
-
-      $fileName = str_replace('.json', '', ALTITUDE_FILE);
-      $fileName = $fileName . '-' . date('Y-m-d') . '.json';
-      rename(ALTITUDE_FILE, $fileName);
-      break;
-}
+main($opts);

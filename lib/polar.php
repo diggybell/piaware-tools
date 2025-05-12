@@ -139,7 +139,7 @@ function polar2cart($coord)
    \param $fromLow The beginning of the source range
    \param $fromHigh The end of the source range
    \param $toLow The beginning of the target range
-   \param $toLow The end of the target range
+   \param $toHigh The end of the target range
    \returns The value scaled from the source range to the target range
 */
 function scaleRangeValue($value, $fromLow, $fromHigh, $toLow, $toHigh)

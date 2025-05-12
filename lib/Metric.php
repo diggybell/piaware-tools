@@ -1,6 +1,11 @@
 <?php
 
 /**
+    \file Metric.php
+    \brief Contains the Metric class
+*/
+
+/**
     \class Metric
     \brief Encapsulates basic statistical calculations for min/max/average/es
     \ingroup Lib

@@ -3,6 +3,11 @@
 include_once('Metric.php');
 
 /**
+    \file MetricSet.php
+    \brief Containes the MetricSet class
+*/
+
+/**
     \class MetricSet
     \brief This object encapsulates a set of metrics to be manipulated together
     \ingroup Lib
@@ -74,6 +79,7 @@ class MetricSet
     /**
         \brief Update a metric in the metric set
         \param $name The name of the metric to update
+        \param $value The metric value to update
         \retval true The metric was updated
         \retval false The metric does not exist
         \returns Status of update

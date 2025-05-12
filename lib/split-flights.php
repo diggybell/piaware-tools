@@ -1,11 +1,19 @@
 <?php
 
+/**
+    \file split-flights.php
+    \ingroup Lib
+    \brief This file contains functions that can be used to split long aircraft tracks into flights
+*/
+
 include_once('../lib/config.php');
 include_once('../lib/cardinals.php');
 
-//
-// expanded compact date/time to formatted ate/time (YYYYMMDD-HHMMSS -> YYYY-MM-DD HH:MM:SS
-//
+/**
+    \brief Expanded compact date/time to formatted ate/time (YYYYMMDD-HHMMSS -> YYYY-MM-DD HH:MM:SS
+    \param $key Date/Time without punctuation
+    \returns Date/Time formatted with punctuation
+*/
 function splitPositionKey($key)
 {
     $ret = sprintf("%s-%s-%s %s:%s:%s",
@@ -18,9 +26,11 @@ function splitPositionKey($key)
     return $ret;
 }
 
-//
-// split flight tracks where there is a difference of FLIGHT_BOUNDARY minutes between positions
-//
+/**
+    \brief Split aircraft tracks where there is a difference of FLIGHT_BOUNDARY minutes between positions
+    \param $fileName The name of the aircraft history file to process
+    \param $splitTime The number of minutes between positions to be used to split the aircraft track
+*/
 function splitFlights($fileName, $splitTime=FLIGHT_BOUNDARY)
 {
     $ret = [];
@@ -55,9 +65,11 @@ function splitFlights($fileName, $splitTime=FLIGHT_BOUNDARY)
     return $ret;
 }
 
-//
-// calculate the track length for a flight
-//
+/**
+    \brief Calculate the track length for a flight
+    \param $positions The list of positions to be calculated
+    \returns The number of miles between the first and last positions in the track
+*/
 function calculateTrackLength($positions)
 {
     // initialize the track length for this aircraft

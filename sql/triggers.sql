@@ -1,3 +1,8 @@
+/**
+    \file triggers.sql
+    \brief Defines audit triggers for PiAware Tools database tables
+*/
+
 USE piaware;
 
 DROP TRIGGER IF EXISTS aircraft_insert;

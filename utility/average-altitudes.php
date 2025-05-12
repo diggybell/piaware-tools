@@ -1,9 +1,17 @@
 <?php
 
+/**
+    \file average-altitudes.php
+    \brief This utility will read the altitude history file and calculate the average altitude in each ring
+*/
 include_once('../lib/config.php');
 include_once('../lib/Metric.php');
 include_once('../lib/cardinals.php');
 
+/**
+    \brief Calculate the averate altitude for each ring
+    \returns Array with average for each ring
+*/
 function getAverageAltitudeRange()
 {
     $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
@@ -27,6 +35,10 @@ function getAverageAltitudeRange()
 
     return $averages;
 }
+
+//
+// main application code
+//
 
 $averages = getAverageAltitudeRange();
 foreach($averages as $index => $ring)

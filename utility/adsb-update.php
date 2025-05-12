@@ -1,5 +1,11 @@
 <?php
 
+/**
+    \file adsb-update.php
+    \brief This script manages transfer of aircraft and position data from PiAware to the PiAware Tools database
+    \ingroup PiAwareTools
+*/
+
 include_once('autoload.php');
 include_once('autoconfig.php');
 
@@ -7,6 +13,14 @@ use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
 use \DigTech\Database\Record as Record;
 
+/**
+    \brief Insert or update aircraft data
+    \param $db Database connection
+    \param $aircraft Aircraft information to update
+    \returns Status of update
+    \retval true Update was successful
+    \retval false Update failed
+*/
 function updateAircraft($db, $aircraft)
 {
     global $statistics;

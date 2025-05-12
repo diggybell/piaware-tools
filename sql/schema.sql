@@ -1,3 +1,8 @@
+/**
+    \file schema.sql
+    \brief Defines PiAware Tools database tables
+*/
+
 DROP DATABASE IF EXISTS piaware;
 CREATE DATABASE piaware;
 USE piaware;

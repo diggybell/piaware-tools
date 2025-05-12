@@ -3,6 +3,11 @@
 include_once('Metric.php');
 
 /**
+    \file MetricSet.php
+    \brief Containes the MetricSet class
+*/
+
+/**
     \class MetricSet
     \brief This object encapsulates a set of metrics to be manipulated together
     \ingroup Lib

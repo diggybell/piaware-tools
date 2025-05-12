@@ -1,5 +1,16 @@
 <?php
 
+/**
+    \file faa-import.php
+    \brief This script creates the SQL to create/truncate and import the FAA Registration database
+    \ingroup PiAwareTools
+*/
+
+/**
+    \brief Get the fixed with column length from the data in the file
+    \param $line The first line of the file that contains data (headers are in first line)
+    \returns Array containing the width of each column in the data file
+*/
 function getColumnWidths($line)
 {
     $widths = [];
@@ -16,6 +27,14 @@ function getColumnWidths($line)
     return $widths;
 }
 
+/**
+    \brief Read the headers and first line of data to create the name and columns for the file
+    \param $basePath Base path to PiAware Tools
+    \param $inputFile The data file to be used to create the schema
+    \returns Array containing the table name and a list of column names
+    \retval table The name of the table
+    \retval columns The list of column names
+*/
 function getCSVSchema($basePath, $inputFile)
 {
     $ret = [];
@@ -62,6 +81,10 @@ function getCSVSchema($basePath, $inputFile)
     return null;
 }
 
+/*
+    \brief Generate the SQL to create the table
+    \param $schema The table name a column list to create SQL for
+*/
 function generateSchema($schema)
 {
     printf("\nDROP TABLE IF EXISTS %s;\n", $schema['table']);
@@ -76,10 +99,14 @@ function generateSchema($schema)
     printf("\n) ENGINE=InnoDB;\n");
 }
 
+/**
+    \brief Generate the SQL to import the data from the FAA data file
+    \param $schema The table name and list of columns
+    \param $basePath The base path to the PiAware Tools
+    \param $inputFile The data file containing the data to be imported
+*/
 function generateImport($schema, $basePath, $inputFile)
 {
-    $ret = '';
-
     // create preamble
     $preamble = sprintf("INSERT INTO %s (", $schema['table']);
 
@@ -150,19 +177,26 @@ function generateImport($schema, $basePath, $inputFile)
         }
         fclose($file);
 
-        return $ret;
+        return;
     }
 
-    return null;
+    return;
 }
 
-function generateTruncate($fileName)
+/**
+    \brief Generate the SQL to truncate the table
+    \brief $tableName The name of the table to be truncated
+*/
+function generateTruncate($tableName)
 {
-    $fileName = strtolower($fileName);
-    $fileName = str_replace('.txt', '', $fileName);
-    printf("TRUNCATE TABLE %s;\n", $fileName);
+    $tableName = strtolower($tableName);
+    $tableName = str_replace('.txt', '', $tableName);
+    printf("TRUNCATE TABLE %s;\n", $tableName);
 }
 
+/**
+   \brief Display usage and help information
+*/
 function usage()
 {
 ?>

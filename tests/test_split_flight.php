@@ -2,7 +2,7 @@
 
 include_once('../lib/split-flights.php');
 
-$ret = splitFlights('../aircraft-history.json');
+$ret = splitTracks('../aircraft-history.json');
 foreach($ret as $icao => $flights)
 {
     foreach($flights as $index => $flight)

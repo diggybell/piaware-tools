@@ -27,39 +27,50 @@ function splitPositionKey($key)
 }
 
 /**
+    \brief Split aircraft track where there is a difference of FLIGHT_BOUNDARY minutes between positions
+    \param $positions The list of pisitions to split if needed
+    \param $splitTime The number of minutes between positions to be used to split the aircraft track
+    \returns Array containing one or more flights
+*/
+function splitTrack($positions, $splitTime=FLIGHT_BOUNDARY)
+{
+    $flightList = [];
+    $flightIndex = 0;
+    $positionIndex = array_keys($positions);
+    for($current = 0, $next = 1;
+        $next < count($positionIndex);
+        $current++, $next++)
+    {
+        $flightList[$flightIndex][$positionIndex[$current]] = $positions[$positionIndex[$current]];
+        $first  = strtotime(splitPositionKey($positionIndex[$current]));
+        $second = strtotime(splitPositionKey($positionIndex[$next]));
+
+        $difference = $second - $first;
+
+        if($difference > $splitTime)
+        {
+            $flightIndex++;
+        }
+    }
+    // be sure and ad the last (now current) position to the current track
+    $flightList[$flightIndex][$positionIndex[$current]] = $positions[$positionIndex[$current]];
+
+    return $flightList;
+}
+
+/**
     \brief Split aircraft tracks where there is a difference of FLIGHT_BOUNDARY minutes between positions
     \param $fileName The name of the aircraft history file to process
     \param $splitTime The number of minutes between positions to be used to split the aircraft track
 */
-function splitFlights($fileName, $splitTime=FLIGHT_BOUNDARY)
+function splitTracks($fileName, $splitTime=FLIGHT_BOUNDARY)
 {
     $ret = [];
     
     $history = json_decode(file_get_contents($fileName), true);
     foreach($history as $icao => $aircraft)
     {
-        $flightList = [];
-        $flightIndex = 0;
-        $positionIndex = array_keys($aircraft['positions']);
-        for($current = 0, $next = 1;
-            $next < count($positionIndex);
-            $current++, $next++)
-        {
-            $flightList[$flightIndex][$positionIndex[$current]] = $aircraft['positions'][$positionIndex[$current]];
-            $first  = strtotime(splitPositionKey($positionIndex[$current]));
-            $second = strtotime(splitPositionKey($positionIndex[$next]));
-
-            $difference = $second - $first;
-
-            if($difference > $splitTime)
-            {
-                $flightIndex++;
-            }
-        }
-        // be sure and ad the last (now current) position to the current track
-        $flightList[$flightIndex][$positionIndex[$current]] = $aircraft['positions'][$positionIndex[$current]];
-
-        $ret[$icao] = $flightList;
+        $ret[$icao] = splitTrack($aircraft['positions']);
     }
 
     return $ret;

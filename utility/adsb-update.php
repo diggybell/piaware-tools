@@ -148,8 +148,8 @@ function updateTrack($db, $flightSeq, $timeStamp, $track)
         $recFlightTrack->set('track', $track['track']);
         $recFlightTrack->set('distance', $track['distance']);
         $recFlightTrack->set('bearing', $track['bearing']);
-        $recFlightTrack->set('cardinal', $track['cardinal']);
-        $recFlightTrack->set('ring', $track['ring']);
+        $recFlightTrack->set('cardinal', $track['sector']);
+        $recFlightTrack->set('ring', $track['zone']);
         $recFlightTrack->set('rssi', $track['rssi']);
 
         if($recFlightTrack->get('track_seq') == 0)

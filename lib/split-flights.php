@@ -102,3 +102,23 @@ function calculateTrackLength($positions)
 
     return $trackLength;
 }
+
+/**
+    \brief Calculate the minumum altitude for a track
+    \param $positions Array of positions from PiAware
+    \returns The minimum altitude found in the track
+*/
+function calculateMinimumTrackAltitude($positions)
+{
+    $minimumAltitude = 0;
+
+    foreach($positions as $position)
+    {
+        if($minimumAltitude == 0 || $position['alt_baro'] < $minimumAltitude)
+        {
+            $minimumAltitude = $position['alt_baro'];
+        }
+    }
+
+    return $minimumAltitude;
+}

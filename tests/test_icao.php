@@ -3,6 +3,12 @@
 include_once('../lib/config.php');
 include_once('../lib/icao.php');
 
-$icao = '440D9B';
+$tail = 'N999ZZ';
+$tgtCode = 0xAE29DD;
 
-printf("%-10s - %s\n", $icao, getICAOCountry($icao));
+$icao = icaoHexCode($tail);
+$first = $icao + 1;
+
+$diff = $tgtCode - $icao;
+
+printf("Last GA: %06X (%s) - First: %06X - Target: %-6X - Diff: %06X (%d)", $icao, $tail, $first, $tgtCode, $diff, $diff);

@@ -183,14 +183,14 @@ function createPolarMap($width=50, $bands=6)
 
 /**
    \brief Output the graph as SVG
-   \param $content String containing graph-specific content
+   \param $map Polar map containing data to be displayed
    \param $centerX The X coordinate for the center of the graph in the viewport
    \param $centerY The Y coordinate for the center of the graph in the viewport
    \param $width The width of each ring (default 50)
    \param $rings The number of rings (default 6)
    \returns String containing markup for the complete SVG
 */
-function createPolarSVG($content, $centerX, $centerY, $width=50, $rings=6)
+function createPolarSVG($map, $centerX, $centerY, $width=50, $rings=6)
 {
    $ret = '';
 
@@ -206,7 +206,32 @@ function createPolarSVG($content, $centerX, $centerY, $width=50, $rings=6)
                       $radius);
    }
 
-   $ret .= $content;
+   foreach($map as $sector)
+   {
+      foreach($sector as $band => $coords)
+      {
+         $start   = polar2cart($coords['start']);
+         $radius1 = polar2cart($coords['radius1']);
+         $arc     = polar2cart($coords['arc']);
+         $radius2 = polar2cart($coords['radius2']);
+
+         $color = altitudeColor($coords['altitude']);
+
+         $ret .= sprintf("<path d=\"M %.3f %.3f 
+                                    L %.3f %.3f 
+                                    A %d %d 22.5 0 1 %.3f %.3f 
+                                    L %.3f %.3f 
+                                    A %d %d -22.5 0 0 %.3f %.3f\" stroke=\"white\" stroke-width=\"2\" fill=\"#%06X\"><title>%s</title></path>\n",
+                         $start['x'] + $centerX, $start['y'] + $centerY,
+                         $radius1['x'] + $centerX, $radius1['y'] + $centerY,
+                         ($band + 1) * $width, ($band + 1) * $width, $arc['x'] + $centerX, $arc['y'] + $centerY,
+                         $radius2['x'] + $centerX, $radius2['y'] + $centerY,
+                         $band * $width, $band * $width, $start['x'] + $centerX, $start['y'] + $centerY,
+                         $coords['color'],
+                         $coords['label']);
+      }
+   }
+
 
    $ret .= sprintf("</svg>\n");
 

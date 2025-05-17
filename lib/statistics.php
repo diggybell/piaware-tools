@@ -26,11 +26,20 @@ function outputStatistics()
 
     $runtimeStatistics['system-end-time'] = date('Y-m-d H:i:s');
 
+    $elapsed = strtotime($runtimeStatistics['system-end-time']) - strtotime($runtimeStatistics['system-start-time']);
+    
+    $hour = $elapsed / 3600;
+    $minute = ($elapsed - ($hour * 3600)) / 60;
+    $second = $elapsed % 60;
+    $str = sprintf("%02d:%02d:%02d", $hour, $minute, $second);
+    
+    $runtimeStatistics['system-elapsed-time'] = $str;
+
     ksort($runtimeStatistics);
 
     Logger::log("Execution Statistics for %s\n", $runtimeStatistics['system-app-name']);
     foreach($runtimeStatistics as $name => $value)
     {
-        Logger::log("%-20s - %s\n", $name, $value);
+        Logger::log("    %-25s - %s\n", $name, $value);
     }
 }

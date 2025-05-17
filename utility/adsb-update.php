@@ -142,7 +142,7 @@ function main($fileName)
         $aircraftList = json_decode(file_get_contents($fileName), true);
         foreach($aircraftList as $icao => $aircraft)
         {
-            Logger::log("Processing %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
+            //Logger::log("Processing %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
             if(strlen($aircraft['icao']) && $aircraft['icao'][0] != '~')
             {
                 $aircraftSeq = updateAircraft($db, $aircraft);

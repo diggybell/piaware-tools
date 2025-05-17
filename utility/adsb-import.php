@@ -190,16 +190,21 @@ function processAircraftExtract($receiver, $fileList)
                   $aircraftList[$aircraftKey]['tracklength'] = 0;
                   $aircraftList[$aircraftKey]['positions'][$timestampKey] =
                   [
-                     'latitude'    => $aircraft->lat,
-                     'longitude'   => $aircraft->lon,
-                     'altitude'    => $aircraft->alt_baro,
-                     'groundspeed' => $aircraft->gs,
-                     'track'       => $aircraft->track,
-                     'distance'    => $result['nm'],
-                     'bearing'     => $result['bearing'],
-                     'sector'      => $result['cardinal'],
-                     'zone'        => $result['ring'],
-                     'rssi'        => $aircraft->rssi,
+                     'latitude'     => $aircraft->lat,
+                     'longitude'    => $aircraft->lon,
+                     'altitude'     => $aircraft->alt_baro,
+                     'geo_altitude' => $aircraft->alt_geom,
+                     'heading'      => $aircraft->nav_heading,
+                     'climb_rate'   => $aircraft->baro_rate,
+                     'transponder'  => $aircraft->squawk,
+                     'qnh'          => $aircraft->nav_qnh,
+                     'groundspeed'  => $aircraft->gs,
+                     'track'        => $aircraft->track,
+                     'distance'     => $result['nm'],
+                     'bearing'      => $result['bearing'],
+                     'sector'       => $result['cardinal'],
+                     'zone'         => $result['ring'],
+                     'rssi'         => $aircraft->rssi,
                   ];
                   ksort($aircraftList[$aircraftKey]['positions']);
                }

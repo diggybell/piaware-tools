@@ -347,7 +347,7 @@ Options
 
 /**
     \brief Main entry point
-    \param Command line parameters
+    \param $opts Command line parameters
 */
 function main($opts)
 {

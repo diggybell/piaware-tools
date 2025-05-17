@@ -1,39 +1,5 @@
 <?php
 
-/*
-
-1. Positions have flight_linked flag to indicate they have been linked
-2. Build list of positions by aircraft in time_stamp order
-3. Split the list of positions based on 30 minute gap
-4. Check the last flight for the aircraft to see if this is a continuation
-5. Create a new flight if required
-6. Set the flight_linked flag for all affected positions
-7. Set the flight_seq for all affected positions
-
-Position Query
-
-SELECT
-	a.aircraft_seq,
-    t.track_seq,
-    t.time_stamp
-FROM
-	aircraft a
-		INNER JOIN flight_track t ON (a.aircraft_seq = t.aircraft_seq)
-WHERE
-    t.flight_linked = 0
-ORDER BY 
-	a.aircraft_seq,
-    t.time_stamp
-;
-
-Create Position List
-$positions[time_stamp] = [ aircraft_seq, track_seq ]
-
-$flights = splitTrack($positions);
-
-
-*/
-
 /**
     \file flight-builder.php
     \brief This script processes positions and builds virtual flights based on timestamps
@@ -48,6 +14,11 @@ use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
 use \DigTech\Database\Record as Record;
 
+/**
+    \brief Get the list of unlinked positions
+    \param $db Database connection
+    \returns List of positions for aircraft that havae not been linked to a flight
+*/
 function getPositionList($db)
 {
     $ret = [];
@@ -65,6 +36,15 @@ function getPositionList($db)
     return $ret;
 }
 
+/**
+    \brief Get the most recent flight for the aircraft if within FLIGHT_BOUNDARY
+    \param $db Database connection
+    \param $aircraftSeq The sequence number for the aircraft
+    \param $timeStamp The timestamp for the position being added
+    \returns Sequence number of flight if within FLIGHT_BOUNDARY
+    \retval non-zero Sequence number of target flight
+    \retval 0 The position is the first one in a new flight
+*/
 function getFlight($db, $aircraftSeq, $timeStamp)
 {
     $ret = 0;
@@ -95,6 +75,7 @@ function getFlight($db, $aircraftSeq, $timeStamp)
 
     return $ret;
 }
+
 /**
     \brief Main entry point
 */

@@ -8,6 +8,7 @@
 
 include_once('autoload.php');
 include_once('autoconfig.php');
+include_once('../lib/statistics.php');
 include_once('../lib/split-flights.php');
 
 use \DigTech\Logging\Logger as Logger;
@@ -24,7 +25,7 @@ use \DigTech\Database\Record as Record;
 */
 function updateAircraft($db, $aircraft)
 {
-    global $statistics;
+    global $runtimeStatistics;
 
     $ret = false;
 
@@ -47,13 +48,13 @@ function updateAircraft($db, $aircraft)
         if($recAircraft->get('aircraft_seq') == 0)
         {
             $ret = $recAircraft->insert();
-            $statistics['aircraft-insert']++;
+            $runtimeStatistics['aircraft-insert']++;
             //Logger::log("Inserted aircraft %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
         }
         else
         {
             $ret = $recAircraft->update();
-            $statistics['aircraft-update']++;
+            $runtimeStatistics['aircraft-update']++;
             //Logger::log("Updated aircraft %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
         }
 
@@ -76,7 +77,7 @@ function updateAircraft($db, $aircraft)
 */
 function updatePosition($db, $aircraftSeq, $timeStamp, $track)
 {
-    global $statistics;
+    global $runtimeStatistics;
 
     $recFlightTrack = new Record($db, 'flight_track', [ 'track_seq' => 0]);
 
@@ -111,12 +112,12 @@ function updatePosition($db, $aircraftSeq, $timeStamp, $track)
         if($recFlightTrack->get('track_seq') == 0)
         {
             $ret = $recFlightTrack->insert();
-            $statistics['aircraft-track-insert']++;
+            $runtimeStatistics['aircraft-track-insert']++;
         }
         else
         {
             $ret = $recFlightTrack->update();
-            $statistics['aircraft-track-update']++;
+            $runtimeStatistics['aircraft-track-update']++;
         }
     }
     else
@@ -152,7 +153,7 @@ function main($fileName)
                         updatePosition($db, $aircraftSeq, splitPositionKey($key), $position);
                     }
                 }
-                $statistics['aircraft-processed']++;
+                $runtimeStatistics['aircraft-processed']++;
             }
         }
     }
@@ -163,7 +164,6 @@ function main($fileName)
 
 }
 
-$statistics = [];                       ///< Global statistics
 $fileName = '../aircraft-history.json'; ///< name of tile to process
 $shortOpts = '';                        ///< short command line options (not supported)
 $longOpts = [ 'file:' ];                ///< long command line options
@@ -182,5 +182,3 @@ else
 {
     Logger::error("File does not exist (%s)\n", $fileName);
 }
-
-print_r($statistics);

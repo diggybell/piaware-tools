@@ -68,69 +68,19 @@ function updateAircraft($db, $aircraft)
 }
 
 /*
-    \brief Update a flight and tracks in the database
-    \param $db Database connection
-    \param $aircraftSeq The sequence number for the aircraft
-    \param $track The track to be updated
-*/
-function updateFlight($db, $aircraftSeq, $positions)
-{
-    global $statistics;
-
-    $recFlight = new Record($db, 'flight', [ 'flight_seq' => 0]);
-
-    $sql = sprintf("SELECT flight_seq FROM flight WHERE aircraft_seq = %d AND first_seen = '%s'", $aircraftSeq, splitPositionKey(array_key_first($positions)));
-    $res = $db->query($sql);
-    if($res)
-    {
-        $row = $db->fetch($res);
-
-        $recFlight->set('flight_seq', $row['flight_seq']);
-        $recFlight->read();
-
-        $recFlight->set('aircraft_seq', $aircraftSeq);
-        $recFlight->set('first_seen', splitPositionKey(array_key_first($positions)));
-        $recFlight->set('last_seen', splitPositionKey(array_key_last($positions)));
-
-        if($recFlight->get('flight_seq') == 0)
-        {
-            $ret = $recFlight->insert();
-            $statistics['flight-insert']++;
-        }
-        else
-        {
-            $ret = $recFlight->update();
-            $statistics['flight-update']++;
-        }
-
-        if($ret)
-        {
-            foreach($positions as $key => $position)
-            {
-                updateTrack($db, $recFlight->get('flight_seq'), splitPositionKey($key), $position);
-            }
-        }
-    }
-    else
-    {
-        Logger::log("Unable to retrieve flight\n");
-    }
-}
-
-/*
     \brief Update a track in the database
     \param $db Database connection
-    \param $FlightSeq The sequence number for the flight
+    \param $aircraftSeq The sequence number for the aircraft
     \param $timeStamp The timestamp key for this track
     \param $track The track to be updated
 */
-function updateTrack($db, $flightSeq, $timeStamp, $track)
+function updatePosition($db, $aircraftSeq, $timeStamp, $track)
 {
     global $statistics;
 
     $recFlightTrack = new Record($db, 'flight_track', [ 'track_seq' => 0]);
 
-    $sql = sprintf("SELECT track_seq FROM flight_track WHERE flight_seq = %d AND time_stamp = '%s'", $flightSeq, $timeStamp);
+    $sql = sprintf("SELECT track_seq FROM flight_track WHERE aircraft_seq = %d AND time_stamp = '%s'", $aircraftSeq, $timeStamp);
     $res = $db->query($sql);
     if($res)
     {
@@ -139,28 +89,34 @@ function updateTrack($db, $flightSeq, $timeStamp, $track)
         $recFlightTrack->set('track_seq', $row['track_seq']);
         $recFlightTrack->read();
 
-        $recFlightTrack->set('flight_seq', $flightSeq);
-        $recFlightTrack->set('time_stamp', $timeStamp);
+        $recFlightTrack->set('aircraft_seq', $aircraftSeq);
+        $recFlightTrack->set('time_stamp', splitPositionKey($timeStamp));
         $recFlightTrack->set('latitude', $track['latitude']);
         $recFlightTrack->set('longitude', $track['longitude']);
         $recFlightTrack->set('altitude', (is_numeric($track['altitude'])) ? $track['altitude'] : 0);
-        $recFlightTrack->set('groundspeed', $track['groundspeed']);
-        $recFlightTrack->set('track', $track['track']);
-        $recFlightTrack->set('distance', $track['distance']);
-        $recFlightTrack->set('bearing', $track['bearing']);
+        $recFlightTrack->set('geo_altitude', (is_numeric($track['geo_altitude'])) ? $track['geo_altitude'] : 0);
+        $recFlightTrack->set('heading', (is_numeric($track['heading'])) ? $track['heading'] : 0);
+        $recFlightTrack->set('climb_rate', (is_numeric($track['climb_rate'])) ? $track['climb_rate'] : 0);
+        $recFlightTrack->set('transponder', (is_numeric($track['transponder'])) ? $track['transponder'] : 0);
+        $recFlightTrack->set('qnh', (is_numeric($track['qnh'])) ? $track['qnh'] : 0);
+
+        $recFlightTrack->set('groundspeed', (is_numeric($track['groundspeed'])) ? $track['groundspeed'] : 0);
+        $recFlightTrack->set('track', (is_numeric($track['track'])) ? $track['track'] : 0);
+        $recFlightTrack->set('distance', (is_numeric($track['distance'])) ? $track['distance'] : 0);
+        $recFlightTrack->set('bearing', (is_numeric($track['bearing'])) ? $track['bearing'] : 0);
         $recFlightTrack->set('cardinal', $track['sector']);
         $recFlightTrack->set('ring', $track['zone']);
-        $recFlightTrack->set('rssi', $track['rssi']);
+        $recFlightTrack->set('rssi', (is_numeric($track['rssi'])) ? $track['rssi'] : 0);
 
         if($recFlightTrack->get('track_seq') == 0)
         {
             $ret = $recFlightTrack->insert();
-            $statistics['flight-track-insert']++;
+            $statistics['aircraft-track-insert']++;
         }
         else
         {
             $ret = $recFlightTrack->update();
-            $statistics['flight-track-update']++;
+            $statistics['aircraft-track-update']++;
         }
     }
     else
@@ -172,7 +128,7 @@ function updateTrack($db, $flightSeq, $timeStamp, $track)
 /**
     \brief Main entry point
 */
-function main()
+function main($fileName)
 {
     $cfg = getGlobalConfiguration();
     $db = new MyDB\Connection();
@@ -182,7 +138,7 @@ function main()
 
     if($db->connect())
     {
-        $aircraftList = json_decode(file_get_contents('../aircraft-history.json'), true);
+        $aircraftList = json_decode(file_get_contents($fileName), true);
         foreach($aircraftList as $icao => $aircraft)
         {
             Logger::log("Processing %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
@@ -191,10 +147,9 @@ function main()
                 $aircraftSeq = updateAircraft($db, $aircraft);
                 if($aircraftSeq)
                 {
-                    $tracks = splitTrack($aircraft['positions']);
-                    foreach($tracks AS $key => $track)
+                    foreach($aircraft['positions'] AS $key => $position)
                     {
-                        updateFlight($db, $aircraftSeq, $track);
+                        updatePosition($db, $aircraftSeq, splitPositionKey($key), $position);
                     }
                 }
                 $statistics['aircraft-processed']++;
@@ -208,8 +163,24 @@ function main()
 
 }
 
-$statistics = [];       ///< Global statistics
+$statistics = [];                       ///< Global statistics
+$fileName = '../aircraft-history.json'; ///< name of tile to process
+$shortOpts = '';                        ///< short command line options (not supported)
+$longOpts = [ 'file:' ];                ///< long command line options
+$opts = getopt($shortOpts, $longOpts);  ///< command line options
 
-main();
+if(isset($opts['file']))
+{
+    $fileName = $opts['file'];
+}
+
+if(file_exists($fileName))
+{
+    main($fileName);
+}
+else
+{
+    Logger::error("File does not exist (%s)\n", $fileName);
+}
 
 print_r($statistics);

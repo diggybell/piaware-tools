@@ -33,6 +33,8 @@ CREATE TABLE flight
     aircraft_seq            INTEGER         NOT NULL,
     first_seen              DATETIME,
     last_seen               DATETIME,
+    positions               INTEGER,
+    distance                INTEGER,
 
     create_date             DATETIME        DEFAULT NULL,
     modify_date             DATETIME        DEFAULT NULL,
@@ -49,11 +51,17 @@ CREATE INDEX flight_start_ndx
 CREATE TABLE flight_track
 (
     track_seq               INTEGER         AUTO_INCREMENT NOT NULL,
-    flight_seq              INTEGER         NOT NULL,
+    aircraft_seq            INTEGER         NOT NULL,
+    flight_seq              INTEGER         DEFAULT NULL,
     time_stamp              DATETIME,
     latitude                NUMERIC(9,6),
     longitude               NUMERIC(9,6),
     altitude                INTEGER,
+    geo_altitude            INTEGER,
+    heading                 NUMERIC(5.1),
+    climb_rate              INTEGER,
+    transponder             VARCHAR(5),
+    qnh                     NUMERIC(6.1),
     groundspeed             NUMERIC(6,1),
     track                   NUMERIC(5,2),
     distance                INTEGER,
@@ -62,14 +70,25 @@ CREATE TABLE flight_track
     ring                    INTEGER,
     rssi                    NUMERIC(5,1),
 
+    flight_linked           INTEGER         DEFAULT 0,
+
     create_date             DATETIME        DEFAULT NULL,
     modify_date             DATETIME        DEFAULT NULL,
 
     PRIMARY KEY(track_seq),
+    FOREIGN KEY(aircraft_seq) REFERENCES aircraft(aircraft_seq),
     FOREIGN KEY(flight_seq) REFERENCES flight(flight_seq)
 ) ENGINE=InnoDB;
 
+CREATE INDEX aircraft_track_ndx
+    ON flight_track(aircraft_seq);
 CREATE INDEX flight_track_ndx
     ON flight_track(flight_seq);
+CREATE INDEX aircraft_track_sequence_ndx
+    ON flight_track(aircraft_seq, time_stamp);
+CREATE INDEX track_sequence_ndx
+    ON flight_track(time_stamp);
 CREATE INDEX flight_time_ndx
     ON flight_track(flight_seq, time_stamp);
+CREATE INDEX flight_link_ndx
+    ON flight_track(aircraft_seq, flight_linked);

@@ -16,13 +16,19 @@ include_once('../lib/cardinals.php');
 */
 function splitPositionKey($key)
 {
-    $ret = sprintf("%s-%s-%s %s:%s:%s",
-                   substr($key, 0, 4),
-                   substr($key, 4, 2),
-                   substr($key, 6, 2),
-                   substr($key, 9, 2),
-                   substr($key, 11, 2),
-                   substr($key, 13, 2));
+    $ret = $key;
+
+    // make sure the key isn't already formatted, just for sanity
+    if(substr_count($key, '-') == 1 && substr_count($key, ':') == 0)
+    {
+        $ret = sprintf("%s-%s-%s %s:%s:%s",
+                       substr($key, 0, 4),
+                       substr($key, 4, 2),
+                       substr($key, 6, 2),
+                       substr($key, 9, 2),
+                       substr($key, 11, 2),
+                       substr($key, 13, 2));
+    }
     return $ret;
 }
 
@@ -56,24 +62,6 @@ function splitTrack($positions, $splitTime=FLIGHT_BOUNDARY)
     $flightList[$flightIndex][$positionIndex[$current]] = $positions[$positionIndex[$current]];
 
     return $flightList;
-}
-
-/**
-    \brief Split aircraft tracks where there is a difference of FLIGHT_BOUNDARY minutes between positions
-    \param $fileName The name of the aircraft history file to process
-    \param $splitTime The number of minutes between positions to be used to split the aircraft track
-*/
-function splitTracks($fileName, $splitTime=FLIGHT_BOUNDARY)
-{
-    $ret = [];
-    
-    $history = json_decode(file_get_contents($fileName), true);
-    foreach($history as $icao => $aircraft)
-    {
-        $ret[$icao] = splitTrack($aircraft['positions']);
-    }
-
-    return $ret;
 }
 
 /**

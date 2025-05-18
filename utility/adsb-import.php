@@ -6,9 +6,17 @@
    \ingroup ADSB
 */
 
+include_once('autoload.php');
+include_once('autoconfig.php');
+
+include_once('../lib/statistics.php');
 include_once('../lib/config.php');
 include_once('../lib/cardinals.php');
 include_once('../lib/icao.php');
+
+use \DigTech\Logging\Logger as Logger;
+use \DigTech\Database\MySQL as MyDB;
+use \DigTech\Database\Record as Record;
 
 /**
    \brief Get receiver information from receiver.json
@@ -351,6 +359,10 @@ Options
 */
 function main($opts)
 {
+   $cfg = getGlobalConfiguration();
+   $config = $cfg->getSection('logging');
+   Logger::configure($config);
+   
    // load external data
    $receiver = getReceiver();
    $fileList = getOrderedFileList();
@@ -435,6 +447,7 @@ function main($opts)
          break;
    }
 }
+
 // get command line options
 $shortOpts = '';                    ///< Short command line parameters (not supported)
 $longOpts = [

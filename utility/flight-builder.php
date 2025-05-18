@@ -88,6 +88,9 @@ function main()
     $db = new MyDB\Connection();
     $config = $cfg->getSection('db-piaware');
     $db->configure($config);
+    $config = $cfg->getSection('logging');
+    Logger::configure($config);
+    
     $positionList = [];
 
     if($db->connect())

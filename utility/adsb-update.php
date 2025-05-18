@@ -135,6 +135,9 @@ function main($fileName)
     $db = new MyDB\Connection();
     $config = $cfg->getSection('db-piaware');
     $db->configure($config);
+    $config = $cfg->getSection('logging');
+    Logger::configure($config);
+    
     $aircraftList = [];
 
     if($db->connect())

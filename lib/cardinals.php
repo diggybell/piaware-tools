@@ -142,6 +142,16 @@ function getCardinalLabel($index)
     return $cardinalLabels[$index];
 }
 
+/**
+    \brief Convert a cardinal name to the cardinal index
+    \param $cardinal The Cardinal to convert
+    \returns The index for the Cardinal index (N,S,E,W, etc...)
+*/
+function getCardinalIndex($cardinal)
+{
+    global $cardinalLabels;
+    return array_search($cardinal, $cardinalLabels);
+}
 
 /**
     \brief Get the range ring index based on distance from receiver and ring width (default 50)

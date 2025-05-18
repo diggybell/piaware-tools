@@ -198,6 +198,7 @@ function processAircraftExtract($receiver, $fileList)
                   $aircraftList[$aircraftKey]['tracklength'] = 0;
                   $aircraftList[$aircraftKey]['positions'][$timestampKey] =
                   [
+                     'flight'       => $aircraft->flight,
                      'latitude'     => $aircraft->lat,
                      'longitude'    => $aircraft->lon,
                      'altitude'     => $aircraft->alt_baro,
@@ -208,6 +209,14 @@ function processAircraftExtract($receiver, $fileList)
                      'qnh'          => $aircraft->nav_qnh,
                      'groundspeed'  => $aircraft->gs,
                      'track'        => $aircraft->track,
+                     'nic'          => $aircraft->nic,
+                     'rc'           => $aircraft->rc,
+                     'nac_p'        => $aircraft->nac_p,
+                     'nac_v'        => $aircraft->nac_v,
+                     'sil'          => $aircraft->sil,
+                     'sil_type'     => $aircraft->sil_type,
+                     'gva'          => $aircraft->gva,
+                     'sda'          => $aircraft->sda,
                      'distance'     => $result['nm'],
                      'bearing'      => $result['bearing'],
                      'sector'       => $result['cardinal'],

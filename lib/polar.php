@@ -176,6 +176,7 @@ function createPolarMap($width=50, $bands=6)
          $result[$cardinal][$band]['radius1'] = [ 'theta' => $sectorStart,        'radius' => $bandStart + $width ];
          $result[$cardinal][$band]['arc']     = [ 'theta' => $sectorStart + 22.5, 'radius' => $bandStart + $width];
          $result[$cardinal][$band]['radius2'] = [ 'theta' => $sectorStart + 22.5, 'radius' => $bandStart ];
+         $result[$cardinal][$band]['color']   = 0xEAEAEA;
       }
    }
    return $result;

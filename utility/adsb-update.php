@@ -8,6 +8,7 @@
 
 include_once('autoload.php');
 include_once('autoconfig.php');
+include_once('../lib/statistics.php');
 include_once('../lib/split-flights.php');
 
 use \DigTech\Logging\Logger as Logger;
@@ -24,7 +25,7 @@ use \DigTech\Database\Record as Record;
 */
 function updateAircraft($db, $aircraft)
 {
-    global $statistics;
+    global $runtimeStatistics;
 
     $ret = false;
 
@@ -47,13 +48,13 @@ function updateAircraft($db, $aircraft)
         if($recAircraft->get('aircraft_seq') == 0)
         {
             $ret = $recAircraft->insert();
-            $statistics['aircraft-insert']++;
+            $runtimeStatistics['aircraft-insert']++;
             //Logger::log("Inserted aircraft %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
         }
         else
         {
             $ret = $recAircraft->update();
-            $statistics['aircraft-update']++;
+            $runtimeStatistics['aircraft-update']++;
             //Logger::log("Updated aircraft %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
         }
 
@@ -76,7 +77,7 @@ function updateAircraft($db, $aircraft)
 */
 function updatePosition($db, $aircraftSeq, $timeStamp, $track)
 {
-    global $statistics;
+    global $runtimeStatistics;
 
     $recFlightTrack = new Record($db, 'flight_track', [ 'track_seq' => 0]);
 
@@ -91,6 +92,7 @@ function updatePosition($db, $aircraftSeq, $timeStamp, $track)
 
         $recFlightTrack->set('aircraft_seq', $aircraftSeq);
         $recFlightTrack->set('time_stamp', splitPositionKey($timeStamp));
+        $recFlightTrack->set('flight', $track['flight']);
         $recFlightTrack->set('latitude', $track['latitude']);
         $recFlightTrack->set('longitude', $track['longitude']);
         $recFlightTrack->set('altitude', (is_numeric($track['altitude'])) ? $track['altitude'] : 0);
@@ -99,24 +101,31 @@ function updatePosition($db, $aircraftSeq, $timeStamp, $track)
         $recFlightTrack->set('climb_rate', (is_numeric($track['climb_rate'])) ? $track['climb_rate'] : 0);
         $recFlightTrack->set('transponder', (is_numeric($track['transponder'])) ? $track['transponder'] : 0);
         $recFlightTrack->set('qnh', (is_numeric($track['qnh'])) ? $track['qnh'] : 0);
-
         $recFlightTrack->set('groundspeed', (is_numeric($track['groundspeed'])) ? $track['groundspeed'] : 0);
         $recFlightTrack->set('track', (is_numeric($track['track'])) ? $track['track'] : 0);
+        $recFlightTrack->set('rssi', (is_numeric($track['rssi'])) ? $track['rssi'] : 0);
+        $recFlightTrack->set('nic', (is_numeric($track['nic'])) ? $track['nic'] : 0);
+        $recFlightTrack->set('rc', (is_numeric($track['rc'])) ? $track['rc'] : 0);
+        $recFlightTrack->set('nac_p', (is_numeric($track['nac_p'])) ? $track['nac_p'] : 0);
+        $recFlightTrack->set('nac_v', (is_numeric($track['nac_v'])) ? $track['nac_v'] : 0);
+        $recFlightTrack->set('sil', (is_numeric($track['sil'])) ? $track['sil'] : 0);
+        $recFlightTrack->set('sil_type', $track['sil_type']);
+        $recFlightTrack->set('gva', (is_numeric($track['gva'])) ? $track['gva'] : 0);
+        $recFlightTrack->set('sda', (is_numeric($track['sda'])) ? $track['sda'] : 0);
         $recFlightTrack->set('distance', (is_numeric($track['distance'])) ? $track['distance'] : 0);
         $recFlightTrack->set('bearing', (is_numeric($track['bearing'])) ? $track['bearing'] : 0);
         $recFlightTrack->set('cardinal', $track['sector']);
         $recFlightTrack->set('ring', $track['zone']);
-        $recFlightTrack->set('rssi', (is_numeric($track['rssi'])) ? $track['rssi'] : 0);
 
         if($recFlightTrack->get('track_seq') == 0)
         {
             $ret = $recFlightTrack->insert();
-            $statistics['aircraft-track-insert']++;
+            $runtimeStatistics['aircraft-track-insert']++;
         }
         else
         {
             $ret = $recFlightTrack->update();
-            $statistics['aircraft-track-update']++;
+            $runtimeStatistics['aircraft-track-update']++;
         }
     }
     else
@@ -134,6 +143,9 @@ function main($fileName)
     $db = new MyDB\Connection();
     $config = $cfg->getSection('db-piaware');
     $db->configure($config);
+    $config = $cfg->getSection('logging');
+    Logger::configure($config);
+    
     $aircraftList = [];
 
     if($db->connect())
@@ -141,7 +153,7 @@ function main($fileName)
         $aircraftList = json_decode(file_get_contents($fileName), true);
         foreach($aircraftList as $icao => $aircraft)
         {
-            Logger::log("Processing %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
+            //Logger::log("Processing %s[%s]\n", $aircraft['icao'], $aircraft['registry']);
             if(strlen($aircraft['icao']) && $aircraft['icao'][0] != '~')
             {
                 $aircraftSeq = updateAircraft($db, $aircraft);
@@ -152,7 +164,7 @@ function main($fileName)
                         updatePosition($db, $aircraftSeq, splitPositionKey($key), $position);
                     }
                 }
-                $statistics['aircraft-processed']++;
+                $runtimeStatistics['aircraft-processed']++;
             }
         }
     }
@@ -163,7 +175,6 @@ function main($fileName)
 
 }
 
-$statistics = [];                       ///< Global statistics
 $fileName = '../aircraft-history.json'; ///< name of tile to process
 $shortOpts = '';                        ///< short command line options (not supported)
 $longOpts = [ 'file:' ];                ///< long command line options
@@ -182,5 +193,3 @@ else
 {
     Logger::error("File does not exist (%s)\n", $fileName);
 }
-
-print_r($statistics);

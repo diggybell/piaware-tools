@@ -6,9 +6,17 @@
    \ingroup ADSB
 */
 
+include_once('autoload.php');
+include_once('autoconfig.php');
+
+include_once('../lib/statistics.php');
 include_once('../lib/config.php');
 include_once('../lib/cardinals.php');
 include_once('../lib/icao.php');
+
+use \DigTech\Logging\Logger as Logger;
+use \DigTech\Database\MySQL as MyDB;
+use \DigTech\Database\Record as Record;
 
 /**
    \brief Get receiver information from receiver.json
@@ -190,6 +198,7 @@ function processAircraftExtract($receiver, $fileList)
                   $aircraftList[$aircraftKey]['tracklength'] = 0;
                   $aircraftList[$aircraftKey]['positions'][$timestampKey] =
                   [
+                     'flight'       => $aircraft->flight,
                      'latitude'     => $aircraft->lat,
                      'longitude'    => $aircraft->lon,
                      'altitude'     => $aircraft->alt_baro,
@@ -200,6 +209,14 @@ function processAircraftExtract($receiver, $fileList)
                      'qnh'          => $aircraft->nav_qnh,
                      'groundspeed'  => $aircraft->gs,
                      'track'        => $aircraft->track,
+                     'nic'          => $aircraft->nic,
+                     'rc'           => $aircraft->rc,
+                     'nac_p'        => $aircraft->nac_p,
+                     'nac_v'        => $aircraft->nac_v,
+                     'sil'          => $aircraft->sil,
+                     'sil_type'     => $aircraft->sil_type,
+                     'gva'          => $aircraft->gva,
+                     'sda'          => $aircraft->sda,
                      'distance'     => $result['nm'],
                      'bearing'      => $result['bearing'],
                      'sector'       => $result['cardinal'],
@@ -347,10 +364,14 @@ Options
 
 /**
     \brief Main entry point
-    \param Command line parameters
+    \param $opts Command line parameters
 */
 function main($opts)
 {
+   $cfg = getGlobalConfiguration();
+   $config = $cfg->getSection('logging');
+   Logger::configure($config);
+   
    // load external data
    $receiver = getReceiver();
    $fileList = getOrderedFileList();
@@ -435,6 +456,7 @@ function main($opts)
          break;
    }
 }
+
 // get command line options
 $shortOpts = '';                    ///< Short command line parameters (not supported)
 $longOpts = [

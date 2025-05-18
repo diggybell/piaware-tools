@@ -8,6 +8,7 @@
 
 include_once('autoload.php');
 include_once('autoconfig.php');
+include_once('../lib/statistics.php');
 include_once('../lib/split-flights.php');
 
 use \DigTech\Logging\Logger as Logger;
@@ -81,18 +82,21 @@ function getFlight($db, $aircraftSeq, $timeStamp)
 */
 function main()
 {
-    global $statistics;
+    global $runtimeStatistics;
 
     $cfg = getGlobalConfiguration();
     $db = new MyDB\Connection();
     $config = $cfg->getSection('db-piaware');
     $db->configure($config);
+    $config = $cfg->getSection('logging');
+    Logger::configure($config);
+    
     $positionList = [];
 
     if($db->connect())
     {
         $positionList = getPositionList($db);
-        printf("Count: %d\n", count($positionList));
+        Logger::log("Processing positions for %d aircraft\n", count($positionList));
         //print_r($positionList[array_key_first($positionList)]);
 
         foreach($positionList as $aircraftSeq => $positions)
@@ -116,12 +120,12 @@ function main()
                     if($flightSeq == 0)
                     {
                         $ret = $recFlight->insert();
-                        $statistics['flight-insert']++;
+                        $runtimeStatistics['flight-insert']++;
                     }
                     else
                     {
                         $ret = $recFlight->update();
-                        $statistics['flight-update']++;
+                        $runtimeStatistics['flight-update']++;
                     }
                     if($ret)
                     {
@@ -133,7 +137,7 @@ function main()
                             $recTrack->set('flight_linked', 1);
     
                             $ret = $recTrack->update();
-                            $statistics['track-update']++;
+                            $runtimeStatistics['track-update']++;
                         }
                         else
                         {
@@ -151,11 +155,8 @@ function main()
 
 }
 
-$statistics = [];                       ///< Global statistics
 $shortOpts = '';                        ///< short command line options (not supported)
 $longOpts = [ 'file:' ];                ///< long command line options
 $opts = getopt($shortOpts, $longOpts);  ///< command line options
 
 main();
-
-print_r($statistics);

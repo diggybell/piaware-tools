@@ -143,7 +143,9 @@ function main($source, $date)
    $config = $cfg->getSection('logging');
    Logger::configure($config);
 
-   $map = createPolarMap(35, 6);
+   $ringWidth = 35;
+
+   $map = createPolarMap($ringWidth, 6);
 
    switch($source)
    {
@@ -164,7 +166,7 @@ function main($source, $date)
          exit;
    }
 
-   $svg = createPolarSVG($map, 250, 250, 35, count($map[0]));
+   $svg = createPolarSVG($map, 250, 250, $ringWidth, count($map[0]));
 
    printf("<h3>Minimum Altitude By Bearing/Range<br>Date: %s</h3>\n", date('Y-m-d H:i'));
    printf("<div>%s</div>\n", $svg);

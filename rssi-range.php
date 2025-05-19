@@ -63,11 +63,16 @@ function loadRSSIData($db, &$map, $date)
       "SELECT
            cardinal,
            ring,
-           MAX(rssi) AS rssi
+           MIN(sort_key) AS sort_key
        FROM
-           flight_track
-       WHERE
-           DATE(time_stamp) = '%s'
+           (SELECT
+              cardinal,
+              ring,
+              CONCAT(LPAD(cardinal, 3, ' '), LPAD(ring, 2, ' '), LPAD(rssi, 7, ' '), LPAD(distance, 4, ' ')) AS sort_key
+            FROM
+              flight_track
+            WHERE
+              DATE(create_date) = '%s') AS altitude_keys
        GROUP BY
            cardinal,
            ring
@@ -84,14 +89,16 @@ function loadRSSIData($db, &$map, $date)
       {
          while($row = $db->fetch($res))
          {
-            $ring = $row['ring'];
-            $cardinal = $row['cardinal'];
+            list($cardinal, $ring, $rssi, $distance) = sscanf($row['sort_key'], "%s %d %f %d");
+
             $cardinalIndex = getCardinalIndex($cardinal);
 
-            $rssi = scaleRangeValue($row['rssi'], -50, 0, 0, 100);
+            $rssiScaled = scaleRangeValue($rssi, -50, 0, 0, 100);
 
-            $map[$cardinalIndex][$ring]['color']    = percentageColor($rssi);
-            $map[$cardinalIndex][$ring]['label']    = sprintf("RSSI: %.1f", $row['rssi']);
+            $map[$cardinalIndex][$ring]['color']    = percentageColor($rssiScaled);
+            $map[$cardinalIndex][$ring]['label']    = sprintf("%.1f@%d", $rssi, $distance);
+            $map[$cardinalIndex][$ring]['rssi']     = $rssi;
+            $map[$cardinalIndex][$ring]['distance'] = $distance;
          }
       }
       else
@@ -117,7 +124,9 @@ function main($source, $date)
    $config = $cfg->getSection('logging');
    Logger::configure($config);
 
-   $map = createPolarMap(35, 6);
+   $ringWidth = 35;
+
+   $map = createPolarMap($ringWidth, 6);
 
    switch($source)
    {
@@ -138,7 +147,7 @@ function main($source, $date)
          exit;
    }
 
-   $svg = createPolarSVG($map, 250, 250, 35, count($map[0]));
+   $svg = createPolarSVG($map, 250, 250, $ringWidth, count($map[0]));
 
    printf("<h3>Maximum RSSI By Bearing/Range<br>Date: %s</h3>\n", date('Y-m-d H:i'));
    printf("<div>%s</div>\n", $svg);

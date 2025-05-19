@@ -220,7 +220,7 @@ function percentageLegend($labels)
 //                       ($index % 20 == 0) ? $index : '&nbsp;');
       $row2 .= sprintf("   <td style=\"background:#%X; width=5\">%s</td>\n",
                        percentageColor($index),
-                     ($index % 20 == 0) ? $labels[$labelIndex++] : '&nbsp;');
+                       ($index % 20 == 0) ? $labels[$labelIndex++] : '&nbsp;');
    }
 
    //$row1 .= "</tr>\n";

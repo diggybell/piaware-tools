@@ -31,6 +31,7 @@ CREATE TABLE flight
 (
     flight_seq              INTEGER         AUTO_INCREMENT NOT NULL,
     aircraft_seq            INTEGER         NOT NULL,
+    flight                  VARCHAR(10),
     first_seen              DATETIME,
     last_seen               DATETIME,
     positions               INTEGER,
@@ -47,6 +48,8 @@ CREATE INDEX aircraft_flight_ndx
     ON flight(aircraft_seq);
 CREATE INDEX flight_start_ndx
     ON flight(aircraft_seq, first_seen);
+CREATE INDEX flight_number_ndx
+    ON flight(flight);
 
 CREATE TABLE flight_track
 (

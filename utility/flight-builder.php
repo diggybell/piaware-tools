@@ -23,13 +23,13 @@ use \DigTech\Database\Record as Record;
 function getPositionList($db)
 {
     $ret = [];
-    $sql = "SELECT a.aircraft_seq, t.track_seq, t.time_stamp FROM aircraft a INNER JOIN flight_track t ON (a.aircraft_seq = t.aircraft_seq) WHERE t.flight_linked = 0 ORDER BY a.aircraft_seq, t.time_stamp";
+    $sql = "SELECT a.aircraft_seq, t.track_seq, t.time_stamp, t.flight FROM aircraft a INNER JOIN flight_track t ON (a.aircraft_seq = t.aircraft_seq) WHERE t.flight_linked = 0 ORDER BY a.aircraft_seq, t.time_stamp";
     $res = $db->query($sql);
     if($res)
     {
         while($row = $db->fetch($res))
         {
-            $ret[$row['aircraft_seq']][$row['time_stamp']] = [ 'track_seq' => $row['track_seq'] ];
+            $ret[$row['aircraft_seq']][$row['time_stamp']] = [ 'track_seq' => $row['track_seq'], 'flight' => $row['flight'] ];
         }
         $db->freeResult($res);
     }
@@ -110,8 +110,14 @@ function main()
                     $recFlight = new Record($db, 'flight', [ 'flight_seq' => $flightSeq ]);
                     $recFlight->read();
     
-                    $recFlight->set('aircraft_seq', $aircraftSeq);
-                    $recFlight->set('last_seen', $timeStamp);
+                    $recFlight->set('aircraft_seq',     $aircraftSeq);
+                    $recFlight->set('last_seen',        $timeStamp);
+
+                    if(strlen($track['flight']))
+                    {
+                        $recFlight->set('flight', $track['flight']);
+                    }
+
                     if($flightSeq == 0)
                     {
                         $recFlight->set('first_seen', $timeStamp);
@@ -127,6 +133,7 @@ function main()
                         $ret = $recFlight->update();
                         $runtimeStatistics['flight-update']++;
                     }
+
                     if($ret)
                     {
                         $recTrack = new Record($db, 'flight_track', [ 'track_seq' => 0 ]);

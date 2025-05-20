@@ -1,8 +1,8 @@
 <?php
 
 /**
-   \file altitude-range.php
-   \brief Creates the Altitude Range graph and HTML table
+   \file rssi-range.php
+   \brief Creates the RSSI Range graph and HTML table
    \ingroup Intel
 */
 
@@ -17,30 +17,10 @@ use \DigTech\Database\MySQL as MyDB;
 use \DigTech\Database\Record as Record;
 
 /**
-   \brief Populate the polar map with the altitude/distance data
-   \param $map The polar data set to be populated
-   \param $dataset The calculated minimum altitudes
-*/
-function populateAltitudeMap(&$map, $dataset)
-{
-   foreach($map as $cardinal => $sector)
-   {
-      $label = getCardinalLabel($cardinal);
-      foreach($sector as $band => $coords)
-      {
-         $map[$cardinal][$band]['color'] = altitudeColor($dataset[$label][$band]['altitude']);
-         $map[$cardinal][$band]['label'] = sprintf("%sft(%snm)",
-                                                   $dataset[$label][$band]['altitude'],
-                                                   $dataset[$label][$band]['distance']);
-      }
-   }
-}
-
-/**
-   \brief Output table containing altitude values
+   \brief Output table containing rssi values
    \param $map The polar data set to be output
 */
-function altitudeTable($map)
+function rssiTable($map)
 {
    $ret = '';
 
@@ -72,34 +52,33 @@ function altitudeTable($map)
 }
 
 /*
-   \brief Load minimum altitude data from the database
+   \brief Load maximum rssi data from the database
    \param $db Database connection
    \param $map Initialized polar map
    \param $date The date to retrieve data for
 */
-function loadAltitudeData($db, &$map, $date)
+function loadRSSIData($db, &$map, $date)
 {
    $sql = sprintf(
       "SELECT
-         cardinal,
-         ring,
-         MIN(sort_key) AS sort_key
-      FROM
-         (SELECT
-            cardinal,
-            ring,
-            CONCAT(LPAD(cardinal, 3, ' '), LPAD(ring, 2, ' '), LPAD(altitude, 6, ' '), LPAD(distance, 4, ' ')) AS sort_key
-         FROM
-            flight_track
-         WHERE
-            ValidAltitude(altitude, ring) AND
-            DATE(create_date) = '%s') AS altitude_keys
-      GROUP BY
-         cardinal,
-         ring
-      ORDER BY
-         cardinal,
-         ring
+           cardinal,
+           ring,
+           MIN(sort_key) AS sort_key
+       FROM
+           (SELECT
+              cardinal,
+              ring,
+              CONCAT(LPAD(cardinal, 3, ' '), LPAD(ring, 2, ' '), LPAD(rssi, 7, ' '), LPAD(distance, 4, ' ')) AS sort_key
+            FROM
+              flight_track
+            WHERE
+              DATE(create_date) = '%s') AS altitude_keys
+       GROUP BY
+           cardinal,
+           ring
+       ORDER BY
+           cardinal,
+           ring
       ",
       $date);
 
@@ -110,14 +89,16 @@ function loadAltitudeData($db, &$map, $date)
       {
          while($row = $db->fetch($res))
          {
-            list($cardinal, $ring, $altitude, $distance) = sscanf($row['sort_key'], "%s %d %d %d");
+            list($cardinal, $ring, $rssi, $distance) = sscanf($row['sort_key'], "%s %d %f %d");
 
             $cardinalIndex = getCardinalIndex($cardinal);
 
-            $map[$cardinalIndex][$ring]['altitude'] = $altitude;
+            $rssiScaled = scaleRangeValue($rssi, -50, 0, 0, 100);
+
+            $map[$cardinalIndex][$ring]['color']    = percentageColor($rssiScaled);
+            $map[$cardinalIndex][$ring]['label']    = sprintf("%.1f@%d", $rssi, $distance);
+            $map[$cardinalIndex][$ring]['rssi']     = $rssi;
             $map[$cardinalIndex][$ring]['distance'] = $distance;
-            $map[$cardinalIndex][$ring]['color']    = altitudeColor($altitude);
-            $map[$cardinalIndex][$ring]['label']    = sprintf("%d@%d", $altitude, $distance);
          }
       }
       else
@@ -150,7 +131,7 @@ function main($source, $date)
    switch($source)
    {
       case 'database':
-         loadAltitudeData($db, $map, $date);
+         loadRSSIData($db, $map, $date);
          break;
       case 'file':
          $dataset = json_decode(file_get_contents(ALTITUDE_FILE), true);
@@ -168,14 +149,14 @@ function main($source, $date)
 
    $svg = createPolarSVG($map, 250, 250, $ringWidth, count($map[0]));
 
-   printf("<h3>Minimum Altitude By Bearing/Range<br>Date: %s</h3>\n", date('Y-m-d H:i'));
+   printf("<h3>Maximum RSSI By Bearing/Range<br>Date: %s</h3>\n", date('Y-m-d H:i'));
    printf("<div>%s</div>\n", $svg);
 
-   printf("<h3>Altitude Legend (x 1,000 ft)</h3>\n");
-   printf("<div>%s</div>\n", altitudeLegend());
+   printf("<h3>RSSI from -50dB to 0dB</h3>\n");
+   printf("<div>%s</div>\n", percentageLegend(['-50', '-40', '-30', '-20', '-10', '0' ]));
 
-   printf("<h3>Minimum Altitude Data Set (Altitude(Distance))</h3>\n");
-   $table = altitudeTable($map);
+   printf("<h3>Maximum RSSI Data Set (dB)</h3>\n");
+   $table = rssiTable($map);
    printf("<div>%s</div>\n", $table);
 }
 

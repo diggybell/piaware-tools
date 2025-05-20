@@ -22,6 +22,18 @@ $colorMap =
 ];
 
 /**
+   \brief Mapping percentage to colors
+*/
+$colorPercentageMap =
+[
+  [ 'min' =>  0, 'max' => 20, 'operation' => 'g+', 'red' => 255, 'green' =>  51, 'blue' =>  51 ],
+  [ 'min' => 20, 'max' => 40, 'operation' => 'r-', 'red' => 255, 'green' => 255, 'blue' =>  51 ],
+  [ 'min' => 40, 'max' => 60, 'operation' => 'b+', 'red' =>  51, 'green' => 255, 'blue' =>  51 ],
+  [ 'min' => 60, 'max' => 80, 'operation' => 'g-', 'red' =>  51, 'green' => 255, 'blue' => 255 ],
+  [ 'min' => 80, 'max' => 100, 'operation' => 'r+', 'red' =>  51, 'green' =>  51, 'blue' => 255 ]
+];
+
+/**
    \brief Determine the display color based on altitude
    \param $altitude The altitude to use for retrieving color
    \returns The color based on the altitude
@@ -93,6 +105,77 @@ function altitudeColor($altitude)
 }
 
 /**
+   \brief Determine the display color based on percentage
+   \param $percent The percentage to use for retrieving color
+   \returns The color based on the percent
+*/
+function percentageColor($percent)
+{
+   global $colorPercentageMap;
+
+   // set the default altitude to the highest percentage color
+   $red = 255;
+   $green = 0;
+   $blue = 255;
+
+   // return light grey if zerp
+   if($percent == 0)
+   {
+      return 0xEAEAEA;
+   }
+
+   // cap the color scale at 45000 ft
+   if($percent > 100)
+   {
+      return ($red << 16 | $green << 8 | $blue);
+   }
+   
+   $startPoint = $percent;
+
+   // scan the list of altitude ranges
+   foreach($colorPercentageMap as $rangeSet)
+   {
+      if($startPoint >= $rangeSet['min'] && $startPoint <= $rangeSet['max'])
+      {
+         // set the default color value for this altitude range
+         $red   = $rangeSet['red'];
+         $green = $rangeSet['green'];
+         $blue  = $rangeSet['blue'];
+
+         // scale the altitude to the altitude range and color offset
+         $offsetAltitude = $percent - $rangeSet['min'];
+         $offsetRange = $rangeSet['max'] - $rangeSet['min'];
+         $offsetPoint = scaleRangeValue($offsetAltitude, 0, $offsetRange, 0, 204);
+
+         // adjust the color elements based on the altitude range operation
+         switch($rangeSet['operation'])
+         {
+            case 'r+':
+               $red += $offsetPoint;
+               break;
+            case 'r-':
+               $red -= $offsetPoint;
+               break;
+            case 'g+':
+               $green += $offsetPoint;
+               break;
+            case 'g-':
+               $green -= $offsetPoint;
+               break;
+            case 'b+':
+               $blue += $offsetPoint;
+               break;
+            case 'b-':
+               $blue -= $offsetPoint;
+               break;
+            }
+      }
+   }
+
+   return ($red << 16 | $green << 8 | $blue);
+}
+
+/**
    \brief Create the altitude legend as HTML text
 */
 function altitudeLegend()
@@ -115,7 +198,35 @@ function altitudeLegend()
    $row1 .= "</tr>\n";
    $row2 .= "</tr>\n";
 
-   return sprintf("<table cdllpadding=\"2\" cellspacing=\"1\">\n%s%s</table>\n", $row1, $row2);
+   return sprintf("<table cellpadding=\"2\" cellspacing=\"1\">\n%s%s</table>\n", $row1, $row2);
+}
+
+/**
+   \brief Create the altitude legend as HTML text
+*/
+function percentageLegend($labels)
+{
+//   $row1 = '';
+   $row2 = '';
+
+//   $row1 .= "<tr>\n";
+   $row2 .= "<tr>\n";
+
+   $labelIndex = 0;
+   for($index = 0; $index <= 100; $index++)
+   {
+//      $row1 .= sprintf("   <th style=\"width:%dpx\">%s</th>\n",
+//                       ($index % 20 == 0) ? 15 : 2,
+//                       ($index % 20 == 0) ? $index : '&nbsp;');
+      $row2 .= sprintf("   <td style=\"background:#%X; width=5\">%s</td>\n",
+                       percentageColor($index),
+                       ($index % 20 == 0) ? $labels[$labelIndex++] : '&nbsp;');
+   }
+
+   //$row1 .= "</tr>\n";
+   $row2 .= "</tr>\n";
+
+   return sprintf("<table cellpadding=\"0\" cellspacing=\"1\">\n%s</table>\n", $row2);
 }
 
 /**

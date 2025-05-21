@@ -23,7 +23,18 @@ use \DigTech\Database\Record as Record;
 function getPositionList($db)
 {
     $ret = [];
-    $sql = "SELECT a.aircraft_seq, t.track_seq, t.time_stamp, t.flight FROM aircraft a INNER JOIN flight_track t ON (a.aircraft_seq = t.aircraft_seq) WHERE t.flight_linked = 0 ORDER BY a.aircraft_seq, t.time_stamp";
+    $sql = "SELECT
+                a.aircraft_seq,
+                t.track_seq,
+                t.time_stamp,
+                t.flight
+           FROM aircraft a
+                    INNER JOIN flight_track t ON (a.aircraft_seq = t.aircraft_seq)
+          WHERE
+              t.flight_linked = 0
+          ORDER BY
+              a.aircraft_seq,
+              t.time_stamp";
     $res = $db->query($sql);
     if($res)
     {

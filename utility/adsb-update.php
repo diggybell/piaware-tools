@@ -38,10 +38,10 @@ function updateAircraft($db, $aircraft)
         $recAircraft->set('aircraft_seq', $row['aircraft_seq']);
         $recAircraft->read();
 
-        $recAircraft->set('icao_hex',           $aircraft['icao']);
-        $recAircraft->set('n_number',           $aircraft['registry']);
-        $recAircraft->set('adsb_category',      $aircraft['category']);
-        $recAircraft->set('register_country',   $aircraft['country']);
+        if(strlen($aircraft['icao']))     $recAircraft->set('icao_hex',         $aircraft['icao']);
+        if(strlen($aircraft['registry'])) $recAircraft->set('n_number',         $aircraft['registry']);
+        if(strlen($aircraft['category'])) $recAircraft->set('adsb_category',    $aircraft['category']);
+        if(strlen($aircraft['country']))  $recAircraft->set('register_country', $aircraft['country']);
 
         if($recAircraft->get('aircraft_seq') == 0)
         {
@@ -86,32 +86,38 @@ function updatePosition($db, $aircraftSeq, $timeStamp, $track)
         $recFlightTrack->set('track_seq', $row['track_seq']);
         $recFlightTrack->read();
 
-        $recFlightTrack->set('aircraft_seq',    $aircraftSeq);
-        $recFlightTrack->set('time_stamp',      splitPositionKey($timeStamp));
-        $recFlightTrack->set('flight',          $track['flight']);
-        $recFlightTrack->set('latitude',        $track['latitude']);
-        $recFlightTrack->set('longitude',       $track['longitude']);
-        $recFlightTrack->set('altitude',        (is_numeric($track['altitude'])) ? $track['altitude'] : 0);
-        $recFlightTrack->set('geo_altitude',    (is_numeric($track['geo_altitude'])) ? $track['geo_altitude'] : 0);
-        $recFlightTrack->set('heading',         (is_numeric($track['heading'])) ? $track['heading'] : 0);
-        $recFlightTrack->set('climb_rate',      (is_numeric($track['climb_rate'])) ? $track['climb_rate'] : 0);
-        $recFlightTrack->set('transponder',     (is_numeric($track['transponder'])) ? $track['transponder'] : 0);
-        $recFlightTrack->set('qnh',             (is_numeric($track['qnh'])) ? $track['qnh'] : 0);
-        $recFlightTrack->set('groundspeed',     (is_numeric($track['groundspeed'])) ? $track['groundspeed'] : 0);
-        $recFlightTrack->set('track',           (is_numeric($track['track'])) ? $track['track'] : 0);
-        $recFlightTrack->set('rssi',            (is_numeric($track['rssi'])) ? $track['rssi'] : 0);
-        $recFlightTrack->set('nic',             (is_numeric($track['nic'])) ? $track['nic'] : 0);
-        $recFlightTrack->set('rc',              (is_numeric($track['rc'])) ? $track['rc'] : 0);
-        $recFlightTrack->set('nac_p',           (is_numeric($track['nac_p'])) ? $track['nac_p'] : 0);
-        $recFlightTrack->set('nac_v',           (is_numeric($track['nac_v'])) ? $track['nac_v'] : 0);
-        $recFlightTrack->set('sil',             (is_numeric($track['sil'])) ? $track['sil'] : 0);
-        $recFlightTrack->set('sil_type',        $track['sil_type']);
-        $recFlightTrack->set('gva',             (is_numeric($track['gva'])) ? $track['gva'] : 0);
-        $recFlightTrack->set('sda',             (is_numeric($track['sda'])) ? $track['sda'] : 0);
-        $recFlightTrack->set('distance',        (is_numeric($track['distance'])) ? $track['distance'] : 0);
-        $recFlightTrack->set('bearing',         (is_numeric($track['bearing'])) ? $track['bearing'] : 0);
-        $recFlightTrack->set('cardinal',        $track['sector']);
-        $recFlightTrack->set('ring',            $track['zone']);
+        $recFlightTrack->set('aircraft_seq', $aircraftSeq);
+        $recFlightTrack->set('time_stamp', splitPositionKey($timeStamp));
+
+        if(strlen($track['flight']))    $recFlightTrack->set('flight',    $track['flight']);
+        if(strlen($track['latitude']))  $recFlightTrack->set('latitude',  $track['latitude']);
+        if(strlen($track['longitude'])) $recFlightTrack->set('longitude', $track['longitude']);
+
+        $recFlightTrack->set('altitude',        (is_numeric($track['altitude']))        ? $track['altitude']        : 0);
+        $recFlightTrack->set('geo_altitude',    (is_numeric($track['geo_altitude']))    ? $track['geo_altitude']    : 0);
+        $recFlightTrack->set('heading',         (is_numeric($track['heading']))         ? $track['heading']         : 0);
+        $recFlightTrack->set('climb_rate',      (is_numeric($track['climb_rate']))      ? $track['climb_rate']      : 0);
+        $recFlightTrack->set('transponder',     (is_numeric($track['transponder']))     ? $track['transponder']     : 0);
+        $recFlightTrack->set('qnh',             (is_numeric($track['qnh']))             ? $track['qnh']             : 0);
+        $recFlightTrack->set('groundspeed',     (is_numeric($track['groundspeed']))     ? $track['groundspeed']     : 0);
+        $recFlightTrack->set('track',           (is_numeric($track['track']))           ? $track['track']           : 0);
+        $recFlightTrack->set('rssi',            (is_numeric($track['rssi']))            ? $track['rssi']            : 0);
+
+        // value of -1 indicates this value was missing
+        $recFlightTrack->set('nic',             (is_numeric($track['nic']))             ? $track['nic']             : -1);
+        $recFlightTrack->set('rc',              (is_numeric($track['rc']))              ? $track['rc']              : -1);
+        $recFlightTrack->set('nac_p',           (is_numeric($track['nac_p']))           ? $track['nac_p']           : -1);
+        $recFlightTrack->set('nac_v',           (is_numeric($track['nac_v']))           ? $track['nac_v']           : -1);
+        $recFlightTrack->set('sil',             (is_numeric($track['sil']))             ? $track['sil']             : -1);
+        $recFlightTrack->set('gva',             (is_numeric($track['gva']))             ? $track['gva']             : -1);
+        $recFlightTrack->set('sda',             (is_numeric($track['sda']))             ? $track['sda']             : -1);
+
+        $recFlightTrack->set('distance',        (is_numeric($track['distance']))        ? $track['distance']        : 0);
+        $recFlightTrack->set('bearing',         (is_numeric($track['bearing']))         ? $track['bearing']         : 0);
+
+        if(strlen($track['sil_type'])) $recFlightTrack->set('sil_type', $track['sil_type']);
+        if(strlen($track['sector']))   $recFlightTrack->set('cardinal', $track['sector']);
+        if(strlen($track['zone']))     $recFlightTrack->set('ring',     $track['zone']);
 
         if($recFlightTrack->get('track_seq') == 0)
         {

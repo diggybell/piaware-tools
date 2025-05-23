@@ -12,6 +12,6 @@ php flight-builder.php
 php graph-builder.php --graph=altitude
 php graph-builder.php --graph=rssi
 php statistics-builder.php
-php dashboard-builder --section=aircraft
-php dashboard-builder --section=flights
-php dashboard-builder --section-tracks
+php dashboard-builder.php --section=aircraft
+php dashboard-builder.php --section=flights
+php dashboard-builder.php --section-tracks

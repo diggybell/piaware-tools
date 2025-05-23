@@ -7,6 +7,9 @@
 USE faa;
 
 /*
+
+SQL Pattern - Replace table_name and TableName
+
 DROP TABLE IF EXISTS table_name;
 CREATE TABLE table_name
 (
@@ -29,7 +32,9 @@ BEGIN
    RETURN RetStr;
 END; $$
 DELIMITER ;
+
 */
+
 DROP TABLE IF EXISTS adsb_category;
 CREATE TABLE adsb_category
 (
@@ -47,7 +52,15 @@ INSERT INTO adsb_category (id_code, description) VALUES
 ('A4', 'High Vortex Aircraft'),
 ('A5', 'Heavy (> 300000lb)'),
 ('A6', 'High Performance > 5g and 400kt'),
-('A7', 'Rotorcraft');
+('A7', 'Rotorcraft'),
+('B0', 'No Information'),
+('B1', 'Glider/Sailplane'),
+('B2', 'Airship/Balloon'),
+('B3', 'Parachutist/Skydiver'),
+('B4', 'Ultralight/Hang-glider/Para-glider'),
+('B5', 'Reserved'),
+('B6', 'UAV'),
+('B7', 'Space Vehicle');
 
 DROP FUNCTION IF EXISTS GetADSBCategory;
 DELIMITER $$
@@ -70,6 +83,7 @@ CREATE TABLE nacp_category
 ) ENGINE=InnoDB;
 
 INSERT INTO nacp_category (id_code, description) VALUES
+('-1', 'Missing'),
 ('0', 'Unknown Accuracy'),
 ('1', 'RNP-10 Accuracy'),
 ('2', 'RNP-4 Accuracy'),
@@ -108,6 +122,7 @@ CREATE TABLE nacv_category
 ) ENGINE=InnoDB;
 
 INSERT INTO nacv_category (id_code, description) VALUES
+('-1', 'Missing'),
 ('0', '>= 10m/s'),
 ('1', '< 10m/s'),
 ('2', '< 3m/s'),
@@ -135,6 +150,7 @@ CREATE TABLE nic_category
 ) ENGINE=InnoDB;
 
 INSERT INTO nic_category (id_code, description) VALUES
+('-1', 'Missing'),
 ('0', 'Unknown RC'),
 ('1', 'RC < 20nm'),
 ('2', 'RC < 8nm'),
@@ -197,6 +213,7 @@ CREATE TABLE sda_category
 ) ENGINE=InnoDB;
 
 INSERT INTO sda_category (id_code, description) VALUES
+('-1', 'Missing'),
 ('0', 'Safe/Unknown'),
 ('1', 'Minor'),
 ('2', 'Major'),
@@ -223,6 +240,7 @@ CREATE TABLE sil_category
 ) ENGINE=InnoDB;
 
 INSERT INTO sil_category (id_code, description) VALUES
+('-1', 'Missing'),
 ('0', '> 0.1'),
 ('1', '> 0.001'),
 ('2', '> 0.00001'),

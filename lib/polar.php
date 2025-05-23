@@ -312,7 +312,7 @@ function createPolarSVG($map, $centerX, $centerY, $width=50, $rings=6)
        $index < $rings + 1;
        $index++, $radius += $width)
    {
-      $ret .= sprintf("<circle cx=\"%d\", cy=\"%d\" r=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"transparent\"/>\n",
+      $ret .= sprintf("<circle cx=\"%d\", cy=\"%d\" r=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"transparent\"></circle>\n",
                       $centerX,
                       $centerY,
                       $radius);
@@ -329,11 +329,7 @@ function createPolarSVG($map, $centerX, $centerY, $width=50, $rings=6)
 
          $color = altitudeColor($coords['altitude']);
 
-         $ret .= sprintf("<path d=\"M %.3f %.3f 
-                                    L %.3f %.3f 
-                                    A %d %d 22.5 0 1 %.3f %.3f 
-                                    L %.3f %.3f 
-                                    A %d %d -22.5 0 0 %.3f %.3f\" stroke=\"white\" stroke-width=\"2\" fill=\"#%06X\"><title>%s</title></path>\n",
+         $ret .= sprintf("<path d=\"M %.3f %.3f  L %.3f %.3f  A %d %d 22.5 0 1 %.3f %.3f  L %.3f %.3f  A %d %d -22.5 0 0 %.3f %.3f\" stroke=\"white\" stroke-width=\"2\" fill=\"#%06X\"><title>%s</title></path>\n",
                          $start['x'] + $centerX, $start['y'] + $centerY,
                          $radius1['x'] + $centerX, $radius1['y'] + $centerY,
                          ($band + 1) * $width, ($band + 1) * $width, $arc['x'] + $centerX, $arc['y'] + $centerY,

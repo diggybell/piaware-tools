@@ -94,3 +94,23 @@ BEGIN
     RETURN Ret;
 END; $$
 DELIMITER ;
+
+DROP FUNCTION IF EXISTS CompleteQAData;
+DELIMITER $$
+CREATE FUNCTION CompleteQAData(nic INTEGER, rc INTEGER, nac_p INTEGER, nac_v INTEGER, sil INTEGER, gva INTEGER, sda INTEGER) RETURNS INTEGER DETERMINISTIC
+BEGIN
+    DECLARE Ret INTEGER DEFAULT 1;
+
+    IF (nic = -1) OR
+       (rc = -1) OR
+       (nac_p = -1) OR
+       (nac_v = -1) OR
+       (sil = -1) OR
+       (gva = -1) OR
+       (sda = -1) THEN
+       SET Ret = 0;
+    END IF;
+
+    RETURN Ret;
+END; $$
+DELIMITER ;

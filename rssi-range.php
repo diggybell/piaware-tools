@@ -147,7 +147,7 @@ function main($source, $date)
          exit;
    }
 
-   $svg = createPolarSVG($map, 250, 250, $ringWidth, count($map[0]));
+   $svg = createPolarSVG($map, 250, 250, $ringWidth, 6/*count($map[0])*/);
 
    printf("<h3>Maximum RSSI By Bearing/Range<br>Date: %s</h3>\n", date('Y-m-d H:i'));
    printf("<div>%s</div>\n", $svg);

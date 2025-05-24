@@ -32,6 +32,7 @@ function retrieveResults($db, $sql)
 
     return $ret;
 }
+
 function getSystemAircraftTotals($db)
 {
     $ret = [];
@@ -45,7 +46,7 @@ function getSystemAircraftTotals($db)
                 DATE(create_date)
             ORDER BY
                 1";
-    $ret['created'] = retrieveResults($db, $sql);
+    $ret['Created'] = retrieveResults($db, $sql);
 
     $sql = "SELECT
                 DATE(modify_date) AS label,
@@ -58,7 +59,7 @@ function getSystemAircraftTotals($db)
                 DATE(modify_date)
             ORDER BY
                 1";
-    $ret['modified'] = retrieveResults($db, $sql);
+    $ret['Modified'] = retrieveResults($db, $sql);
     return $ret;
 }
 
@@ -75,7 +76,7 @@ function getSystemFlightTotals($db)
                 DATE(create_date)
             ORDER BY
                 1";
-    $ret['created'] = retrieveResults($db, $sql);
+    $ret['Created'] = retrieveResults($db, $sql);
 
     $sql = "SELECT
                 DATE(modify_date) AS label,
@@ -88,7 +89,7 @@ function getSystemFlightTotals($db)
                 DATE(modify_date)
             ORDER BY
                 1";
-    $ret['modified'] = retrieveResults($db, $sql);
+    $ret['Modified'] = retrieveResults($db, $sql);
     return $ret;
 }
 
@@ -105,7 +106,7 @@ function getSystemFlightTrackTotals($db)
                 DATE(create_date)
             ORDER BY
                 1";
-    $ret['created'] = retrieveResults($db, $sql);
+    $ret['Created'] = retrieveResults($db, $sql);
 
     $sql = "SELECT
                 DATE(modify_date) AS label,
@@ -118,7 +119,7 @@ function getSystemFlightTrackTotals($db)
                 DATE(modify_date)
             ORDER BY
                 1";
-    $ret['modified'] = retrieveResults($db, $sql);
+    $ret['Modified'] = retrieveResults($db, $sql);
     return $ret;
 }
 
@@ -158,6 +159,7 @@ function getTopCountryTotals($db)
 
     return $ret;
 }
+
 /**
     \brief Main entry point
 */

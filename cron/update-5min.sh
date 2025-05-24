@@ -15,3 +15,5 @@ php statistics-builder.php
 php dashboard-builder.php --section=aircraft
 php dashboard-builder.php --section=flights
 php dashboard-builder.php --section=tracks
+php dashboard-builder.php --section=adsb
+php dashboard-builder.php --section=country

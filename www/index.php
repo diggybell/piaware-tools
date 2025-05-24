@@ -122,17 +122,17 @@ function dashboardPanel()
 <div id="panel_dashboard" class="container d-block sm_panel"> <!-- start dashboard panel -->
 
 <div class="row">
-   <h3>Aircraft Statistics</h3>
+   <h3>Aircraft</h3>
    <hr>
    <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-aircraft.html"></div>
 </div>
 <div class="row">
-   <h3>Flight Statistics</h3>
+   <h3>Flights</h3>
    <hr>
    <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flights.html"></div>
 </div>
 <div class="row">
-   <h3>Flight Track Statistics</h3>
+   <h3>Flight Tracks</h3>
    <hr>
    <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-tracks.html"></div>
 </div>
@@ -152,15 +152,15 @@ function graphsPanel()
 <div class="row">
    <h3>Minimum Altitude for Range Rings</h3>
    <hr>
-   <div class="col-md-6 align-middle pt-dynamic-refresh" pt-external-content="graphs/altitude-graph.html"></div>
-   <div class="col-md-6 pt-dynamic-refresh" pt-external-content="graphs/altitude-table.html"></div>
+   <div class="col-md-5 align-middle pt-dynamic-refresh" pt-external-content="graphs/altitude-graph.html"></div>
+   <div class="col-md-7 pt-dynamic-refresh" pt-external-content="graphs/altitude-table.html"></div>
 </div>
 
 <div class="row">
    <h3>Maximum RSSI for Range Rings</h3>
    <hr>
-   <div class="col-md-6 align-middle pt-dynamic-refresh" pt-external-content="graphs/rssi-graph.html"></div>
-   <div class="col-md-6 pt-dynamic-refresh" pt-external-content="graphs/rssi-table.html"></div>
+   <div class="col-md-5 align-middle pt-dynamic-refresh" pt-external-content="graphs/rssi-graph.html"></div>
+   <div class="col-md-7 pt-dynamic-refresh" pt-external-content="graphs/rssi-table.html"></div>
 </div>
 </div> <!-- end of details panel -->
 
@@ -173,6 +173,18 @@ function aircraftPanel()
 ?>
 
 <div id="panel_aircraft" class="container d-none">
+
+<div class="row">
+   <h3>ADS-B Category</h3>
+   <hr>
+   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-adsb.html"></div>
+</div>
+
+<div class="row">
+   <h3>Registration Country</h3>
+   <hr>
+   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-country.html"></div>
+</div>
 
 </div>
 
@@ -212,8 +224,14 @@ function diagnosticsPanel()
 function endPage()
 {
 ?>
-
-<center><p>Copyright &copy; <?php print(date('Y')); ?> - Diggy Bell</p></center>
+<div class="container">
+<div class="row">
+<div class="md-col-12">
+   <hr>
+   <center><p>Copyright &copy; <?php print(date('Y')); ?> - Diggy Bell</p></center>
+</div>
+</div>
+</div>
 <script src="js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

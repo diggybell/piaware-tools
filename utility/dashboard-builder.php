@@ -14,9 +14,9 @@ function statsTable($stats)
         {
             if($index == 0)
             {
-                $header .= sprintf("<th class=\"text_end\">%s</th>", $date);
+                $header .= sprintf("<th class=\"text-end\">%s</th>", $date);
             }
-            $body .= sprintf("<td class=\"text_end\">%s</td>", $count);
+            $body .= sprintf("<td class=\"text-end\">%s</td>", $count);
         }
         $index++;
         $body .= sprintf("</tr>\n");
@@ -105,6 +105,12 @@ switch($section)
         break;
     case 'tracks':
         $content = statsTable($stats['system-totals']['tracks']);
+        break;
+    case 'adsb':
+        $content = statsTable([ 'Number of Aircraft' => $stats['aircraft-category']]);
+        break;
+    case 'country':
+        $content = statsTable([ 'Number of Aircraft' => $stats['register-country']]);
         break;
     default:
         break;

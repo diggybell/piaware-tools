@@ -31,6 +31,36 @@ function statsTable($stats)
     return $ret;
 }
 
+function detailTable($stats)
+{
+    $ret = "<table class=\"table table-striped\">\n";
+    $header = "<tr>";
+    $body   = "";
+
+    $index = 0;
+    foreach($stats as $level1 => $level1Details)
+    {
+        $body .= sprintf("<tr>");
+        foreach($level1Details as $label => $value)
+        {
+            if($index == 0)
+            {
+                $header .= sprintf("<th class=\"text-start\">%s</th>", $label);
+            }
+            $body .= sprintf("<td class=\"text-start\">%s</td>", $value);
+        }
+        $index++;
+        $body .= sprintf("</tr>\n");
+    }
+
+    $header .= sprintf("</tr>\n");
+
+    $ret .= $header;
+    $ret .= $body;
+    $ret .= "</table>\n";
+
+    return $ret;
+}
 function outputPage($content)
 {
    $ret = '';
@@ -48,6 +78,7 @@ function outputPage($content)
 {$content}
 </body>
 </html>
+
 HTML;
 
    return $ret;
@@ -111,6 +142,45 @@ switch($section)
         break;
     case 'country':
         $content = statsTable([ 'Number of Aircraft' => $stats['register-country']]);
+        break;
+    case 'top10a1':
+        $content = detailTable($stats['aircraft-top-10']['A1']);
+        break;
+    case 'top10a2':
+        $content = detailTable($stats['aircraft-top-10']['A2']);
+        break;
+    case 'top10a3':
+        $content = detailTable($stats['aircraft-top-10']['A3']);
+        break;
+    case 'top10a4':
+        $content = detailTable($stats['aircraft-top-10']['A4']);
+        break;
+    case 'top10a5':
+        $content = detailTable($stats['aircraft-top-10']['A5']);
+        break;
+    case 'top10a7':
+        $content = detailTable($stats['aircraft-top-10']['A7']);
+        break;
+    case 'fltcat':
+        $content = statsTable($stats['flight-category']);
+        break;
+    case 'flttop10a1':
+        $content = detailTable($stats['flight-top-10']['A1']);
+        break;
+    case 'flttop10a2':
+        $content = detailTable($stats['flight-top-10']['A2']);
+        break;
+    case 'flttop10a3':
+        $content = detailTable($stats['flight-top-10']['A3']);
+        break;
+    case 'flttop10a4':
+        $content = detailTable($stats['flight-top-10']['A4']);
+        break;
+    case 'flttop10a5':
+        $content = detailTable($stats['flight-top-10']['A5']);
+        break;
+    case 'flttop10a7':
+        $content = detailTable($stats['flight-top-10']['A7']);
         break;
     default:
         break;

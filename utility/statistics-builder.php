@@ -16,7 +16,7 @@ use \DigTech\Database\MySQL as MyDB;
 use \DigTech\Database\Record as Record;
 
 
-function retrieveResults($db, $sql)
+function retrieveSummaryResults($db, $sql)
 {
     $ret = [];
 
@@ -33,6 +33,23 @@ function retrieveResults($db, $sql)
     return $ret;
 }
 
+function retrieveDetailResults($db, $sql)
+{
+    $ret = [];
+
+    $res = $db->query($sql);
+    if($res)
+    {
+        while($row = $db->fetch($res))
+        {
+            $ret[] = $row;
+        }
+        $db->freeResult($res);
+    }
+
+    return $ret;
+}
+
 function getSystemAircraftTotals($db)
 {
     $ret = [];
@@ -42,11 +59,13 @@ function getSystemAircraftTotals($db)
                 count(*) AS count
             FROM
                 aircraft
+            WHERE
+                DATE(create_date) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
             GROUP BY
                 DATE(create_date)
             ORDER BY
                 1";
-    $ret['Created'] = retrieveResults($db, $sql);
+    $ret['Created'] = retrieveSummaryResults($db, $sql);
 
     $sql = "SELECT
                 DATE(modify_date) AS label,
@@ -54,12 +73,13 @@ function getSystemAircraftTotals($db)
             FROM
                 aircraft
             WHERE
-                modify_date != '0000-00-00 00:00:00'
+                modify_date != '0000-00-00 00:00:00' AND
+                DATE(create_date) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
             GROUP BY
                 DATE(modify_date)
             ORDER BY
                 1";
-    $ret['Modified'] = retrieveResults($db, $sql);
+    $ret['Modified'] = retrieveSummaryResults($db, $sql);
     return $ret;
 }
 
@@ -72,11 +92,13 @@ function getSystemFlightTotals($db)
                 count(*) AS count
             FROM
                 flight
+            WHERE
+                DATE(create_date) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
             GROUP BY
                 DATE(create_date)
             ORDER BY
                 1";
-    $ret['Created'] = retrieveResults($db, $sql);
+    $ret['Created'] = retrieveSummaryResults($db, $sql);
 
     $sql = "SELECT
                 DATE(modify_date) AS label,
@@ -84,12 +106,13 @@ function getSystemFlightTotals($db)
             FROM
                 flight
             WHERE
-                modify_date != '0000-00-00 00:00:00'
+                modify_date != '0000-00-00 00:00:00' AND
+                DATE(create_date) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
             GROUP BY
                 DATE(modify_date)
             ORDER BY
                 1";
-    $ret['Modified'] = retrieveResults($db, $sql);
+    $ret['Modified'] = retrieveSummaryResults($db, $sql);
     return $ret;
 }
 
@@ -102,11 +125,13 @@ function getSystemFlightTrackTotals($db)
                 count(*) AS count
             FROM
                 flight_track
+            WHERE
+                DATE(create_date) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
             GROUP BY
                 DATE(create_date)
             ORDER BY
                 1";
-    $ret['Created'] = retrieveResults($db, $sql);
+    $ret['Created'] = retrieveSummaryResults($db, $sql);
 
     $sql = "SELECT
                 DATE(modify_date) AS label,
@@ -114,12 +139,14 @@ function getSystemFlightTrackTotals($db)
             FROM
                 flight_track
             WHERE
-                modify_date != '0000-00-00 00:00:00'
+                modify_date != '0000-00-00 00:00:00' AND
+                DATE(create_date) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
+
             GROUP BY
                 DATE(modify_date)
             ORDER BY
                 1";
-    $ret['Modified'] = retrieveResults($db, $sql);
+    $ret['Modified'] = retrieveSummaryResults($db, $sql);
     return $ret;
 }
 
@@ -136,7 +163,7 @@ function getADSBCategoryTotals($db)
                 a.adsb_category
             ORDER BY
                 1";
-    $ret = retrieveResults($db, $sql);
+    $ret = retrieveSummaryResults($db, $sql);
 
     return $ret;
 }
@@ -155,8 +182,119 @@ function getTopCountryTotals($db)
             ORDER BY
                 2 DESC
             LIMIT 10";
-    $ret = retrieveResults($db, $sql);
+    $ret = retrieveSummaryResults($db, $sql);
 
+    return $ret;
+}
+
+function getTopAircraftModels($db)
+{
+    $ret = [];
+    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A7' ];
+
+    foreach($categoryList as $category)
+    {
+        $sql = "SELECT
+                    dv.aircraft_manufacturer AS Manufacturer,
+                    dv.aircraft_model AS Model,
+                    COUNT(*) AS Count
+                FROM
+                    aircraft a
+                        INNER JOIN faa.aircraft_details_view dv ON (a.icao_hex = dv.icao_hex)
+                WHERE
+                    a.adsb_category = '$category'
+                GROUP BY
+                    dv.aircraft_manufacturer,
+                    dv.aircraft_model
+                ORDER BY
+                    COUNT(*) DESC
+                LIMIT
+                    10";
+        $ret[$category] = retrieveDetailResults($db, $sql);
+    }
+    return $ret;
+}
+
+function getCategoryFlights($db)
+{
+    $ret = [];
+    $sql = "SELECT
+	            DATE(f.first_seen) \"Flight Date\",
+                a.adsb_category AS Category,
+                faa.GetADSBCategory(a.adsb_category) AS Description,
+                COUNT(f.flight_seq) AS Flights
+            FROM
+            	aircraft a
+            		INNER JOIN flight f ON (a.aircraft_seq = f.aircraft_seq)
+            		INNER JOIN faa.aircraft_details_view dv ON (a.icao_hex = dv.icao_hex)
+            WHERE
+	            a.adsb_category IS NOT NULL AND
+                DATE(f.first_seen) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
+
+            GROUP BY
+	            DATE(f.first_seen),
+	            faa.GetADSBCategory(a.adsb_category)
+            ORDER BY
+	            1,
+                2";
+    $dataset = retrieveDetailResults($db, $sql);
+
+    // spin through the data to build out an unpopulated map to ensure table completeness
+    $dates = [];
+    $categories = [];
+    $descriptions = [];
+    foreach($dataset as $row)
+    {
+        $dates[$row['Flight Date']]++;
+        $categories[$row['Category']]++;
+        $descriptions[$row['Category']] = $row['Description'];
+    }
+    ksort($dates);
+    ksort($categories);
+    ksort($descriptions);
+
+    foreach($dates as $date => $dateCount)
+    {
+        foreach($categories as $category => $categoryCount)
+        {
+            $ret[$date][$descriptions[$category]] = 0;
+        }
+    }
+
+    foreach($dataset as $row)
+    {
+        $ret[$row['Flight Date']][$row['Description']] = $row['Flights'];
+    }
+
+    return $ret;
+}
+
+function getTopFlightModels($db)
+{
+    $ret = [];
+    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A7' ];
+
+    foreach($categoryList as $category)
+    {
+        $sql = "SELECT
+                    dv.aircraft_manufacturer AS Manufacturer,
+                    dv.aircraft_model AS Model,
+                    COUNT(f.flight_seq) AS Flights
+                FROM
+                    aircraft a
+                        INNER JOIN flight f ON (a.aircraft_seq = f.aircraft_seq)
+                        INNER JOIN faa.aircraft_details_view dv ON (a.icao_hex = dv.icao_hex)
+                WHERE
+                    a.adsb_category = '$category'
+                GROUP BY
+                    dv.aircraft_manufacturer,
+                    dv.aircraft_model
+                ORDER BY
+                    COUNT(f.flight_seq) DESC
+                LIMIT
+                    10";
+        $ret[$category] = retrieveDetailResults($db, $sql);
+    }
     return $ret;
 }
 
@@ -184,6 +322,9 @@ function main()
         $stats['system-totals']['tracks'] = getSystemFlightTrackTotals($db);
         $stats['aircraft-category'] = getADSBCategoryTotals($db);
         $stats['register-country'] = getTopCountryTotals($db);
+        $stats['aircraft-top-10'] = getTopAircraftModels($db);
+        $stats['flight-category'] = getCategoryFlights($db);
+        $stats['flight-top-10'] = getTopFlightModels($db);
     }
     else
     {

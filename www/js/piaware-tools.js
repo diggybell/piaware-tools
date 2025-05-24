@@ -1,6 +1,6 @@
 var refreshTimer;
 
-refreshTimer = setInterval(refreshContent, 60000);
+refreshTimer = setInterval(refreshContent, 10000);
 
 function initApplication()
 {

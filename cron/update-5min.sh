@@ -3,15 +3,36 @@
 #
 # Update PiAware Tools output every 5 minutes
 cd /home/diggy/source/ads-b
+
+#
+# Retrieve the PiAware data from the receiver
 scp -q diggy@192.168.1.107:/run/dump1090-fa/* data
+
+#
+# Process the PiAware JSON files into aircraft-history.jjson
 cd utility
 php adsb-import.php --altitude
 php adsb-import.php --aircraft
+
+#
+# Update the database from aircraft-history.json
 php adsb-update.php
+
+#
+# Link positions to synthesized flights
 php flight-builder.php
+
+#
+# Build graphs for the dashboard
 php graph-builder.php --graph=altitude
 php graph-builder.php --graph=rssi
+
+#
+# Generate the system statistics
 php statistics-builder.php
+
+#
+# Generate the tables for the dashboard
 php dashboard-builder.php --section=aircraft
 php dashboard-builder.php --section=flights
 php dashboard-builder.php --section=tracks

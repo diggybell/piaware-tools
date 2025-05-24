@@ -63,7 +63,7 @@ function loadAltitudeData($db, &$map, $date)
             $map[$cardinalIndex][$ring]['altitude'] = $altitude;
             $map[$cardinalIndex][$ring]['distance'] = $distance;
             $map[$cardinalIndex][$ring]['color']    = altitudeColor($altitude);
-            $map[$cardinalIndex][$ring]['label']    = sprintf("%d@%d", $altitude, $distance);
+            $map[$cardinalIndex][$ring]['label']    = sprintf("%dft@%dnm", $altitude, $distance);
          }
       }
       else
@@ -122,7 +122,7 @@ function loadRSSIData($db, &$map, $date)
             $rssiScaled = scaleRangeValue($rssi, -50, 0, 0, 100);
 
             $map[$cardinalIndex][$ring]['color']    = percentageColor($rssiScaled);
-            $map[$cardinalIndex][$ring]['label']    = sprintf("%.1f@%d", $rssi, $distance);
+            $map[$cardinalIndex][$ring]['label']    = sprintf("%.1fdB@%dnm", $rssi, $distance);
             $map[$cardinalIndex][$ring]['rssi']     = $rssi;
             $map[$cardinalIndex][$ring]['distance'] = $distance;
          }

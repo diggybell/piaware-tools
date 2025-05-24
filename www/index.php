@@ -73,7 +73,7 @@ function navBar()
              <button type="button" id="tab_aircraft" class="nav-link" onclick="tabClicked('aircraft')">Aircraft</button>
            </li>
            <li class="nav-item">
-             <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flight Tracks</button>
+             <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flights</button>
            </li>
            <li class="nav-item">
              <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
@@ -186,6 +186,49 @@ function aircraftPanel()
    <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-country.html"></div>
 </div>
 
+<div class="row">
+   <h3> Top 10 </h3>
+   <hr>
+   <div class="col-md-4 text-start">
+      Light (< 15,500lb)
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      Small (15,500-75,000lb)
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      Rotorcraft
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a1.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a2.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
+</div>
+
+<div class="row">
+   <hr>
+   <div class="col-md-4 text-start">
+      Large (75,000-300,000lb)
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      High Vortex
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      Heavy (Over 300,000lb)
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a3.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a4.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a5.html"></div>
+</div>
+
 </div>
 
 <?php
@@ -196,6 +239,56 @@ function tracksPanel()
 ?>
 
 <div id="panel_tracks" class="container d-none">
+
+<div class="row">
+   <h3>Flights By Category</h3>
+   <hr>
+   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-fltcat.html"></div>
+</div>
+
+<div class="row">
+   <h3> Top 10 </h3>
+   <hr>
+   <div class="col-md-4 text-start">
+      Light (< 15,500lb)
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      Small (15,500-75,000lb)
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      Rotorcraft
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a1.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a2.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
+</div>
+
+<div class="row">
+   <hr>
+   <div class="col-md-4 text-start">
+      Large (75,000-300,000lb)
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      High Vortex
+      <hr>
+   </div>
+   <div class="col-md-4 text-start">
+      Heavy (Over 300,000lb)
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a3.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a4.html"></div>
+   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a5.html"></div>
+</div>
+
 </div>
 
 <?php

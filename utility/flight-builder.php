@@ -8,8 +8,8 @@
 
 include_once('autoload.php');
 include_once('autoconfig.php');
-include_once('../lib/statistics.php');
-include_once('../lib/split-flights.php');
+include_once('statistics.php');
+include_once('split-flights.php');
 
 use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;

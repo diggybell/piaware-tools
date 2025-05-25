@@ -6,8 +6,8 @@
     \brief This file contains functions that can be used to split long aircraft tracks into flights
 */
 
-include_once('../lib/config.php');
-include_once('../lib/cardinals.php');
+include_once('config.php');
+include_once('cardinals.php');
 
 /**
     \brief Expanded compact date/time to formatted ate/time (YYYYMMDD-HHMMSS -> YYYY-MM-DD HH:MM:SS

@@ -187,7 +187,7 @@ function aircraftPanel()
 </div>
 
 <div class="row">
-   <h3> Top 10 </h3>
+   <h3>Top 10 Aircraft</h3>
    <hr>
    <div class="col-md-4 text-start">
       Light (< 15,500lb)
@@ -247,7 +247,7 @@ function tracksPanel()
 </div>
 
 <div class="row">
-   <h3> Top 10 </h3>
+   <h3>Top 10 by Flight Count</h3>
    <hr>
    <div class="col-md-4 text-start">
       Light (< 15,500lb)

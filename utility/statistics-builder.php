@@ -230,7 +230,6 @@ function getCategoryFlights($db)
             WHERE
 	            a.adsb_category IS NOT NULL AND
                 DATE(f.first_seen) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
-
             GROUP BY
 	            DATE(f.first_seen),
 	            faa.GetADSBCategory(a.adsb_category)
@@ -285,7 +284,8 @@ function getTopFlightModels($db)
                         INNER JOIN flight f ON (a.aircraft_seq = f.aircraft_seq)
                         INNER JOIN faa.aircraft_details_view dv ON (a.icao_hex = dv.icao_hex)
                 WHERE
-                    a.adsb_category = '$category'
+                    a.adsb_category = '$category' AND
+                    f.first_seen > DATE_SUB(NOW(), INTERVAL 1 DAY)
                 GROUP BY
                     dv.aircraft_manufacturer,
                     dv.aircraft_model

@@ -199,6 +199,7 @@ function processAircraftExtract($receiver, $fileList)
                   $aircraftList[$aircraftKey]['positions'][$timestampKey] =
                   [
                      'flight'       => $aircraft->flight,
+                     'category'     => $aircraft->category,
                      'latitude'     => $aircraft->lat,
                      'longitude'    => $aircraft->lon,
                      'altitude'     => $aircraft->alt_baro,

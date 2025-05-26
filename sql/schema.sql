@@ -57,6 +57,7 @@ CREATE TABLE flight_track
     aircraft_seq            INTEGER         NOT NULL,
     flight_seq              INTEGER         DEFAULT NULL,
     time_stamp              DATETIME,
+    adsb_category           VARCHAR(2),
     flight                  VARCHAR(10),
     latitude                NUMERIC(9,6),
     longitude               NUMERIC(9,6),

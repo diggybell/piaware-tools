@@ -214,10 +214,10 @@ CREATE TABLE sda_category
 
 INSERT INTO sda_category (id_code, description) VALUES
 ('-1', 'Missing'),
-('0', 'Safe/Unknown'),
-('1', 'Minor'),
-('2', 'Major'),
-('3', 'Hazardous');
+('0', '> 0.001'),
+('1', '<= 0.001'),
+('2', '<= 0.00001'),
+('3', '<= 0.000001');
 
 DROP FUNCTION IF EXISTS GetSDACategory;
 DELIMITER $$
@@ -253,6 +253,33 @@ BEGIN
    DECLARE RetStr VARCHAR(25) DEFAULT NULL;
 
    SELECT description INTO RetStr FROM sil_category WHERE id_code = search_id;
+   RETURN RetStr;
+END; $$
+DELIMITER ;
+
+DROP TABLE IF EXISTS gva_category;
+CREATE TABLE gva_category
+(
+    id_code         INTEGER          NOT NULL,
+    description     VARCHAR(25),
+
+    PRIMARY KEY(id_code)
+) ENGINE=InnoDB;
+
+INSERT INTO gva_category (id_code, description) VALUES
+('-1', 'Missing'),
+('0', 'Unknown or > 150m'),
+('1', '<= 150m'),
+('2', '<= 45m'),
+('3', 'Reserved');
+
+DROP FUNCTION IF EXISTS GetGVACategory;
+DELIMITER $$
+CREATE FUNCTION GetGVACategory(search_id INTEGER) RETURNS VARCHAR(25) DETERMINISTIC
+BEGIN
+   DECLARE RetStr VARCHAR(25) DEFAULT NULL;
+
+   SELECT description INTO RetStr FROM gva_category WHERE id_code = search_id;
    RETURN RetStr;
 END; $$
 DELIMITER ;

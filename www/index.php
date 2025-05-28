@@ -51,11 +51,12 @@ Logger::configure($config);
 Logger::setEnabled(true);
 
 navBar();
-graphsPanel();
 dashboardPanel();
 aircraftPanel();
 tracksPanel();
+graphsPanel();
 reportsPanel();
+aboutPanel();
 endPage();
 
 function navBar()
@@ -70,16 +71,19 @@ function navBar()
               <button type="button" id="tab_dashboard" class="nav-link active" onclick="tabClicked('dashboard')">Dashboard</button>
             </li>
            <li class="nav-item">
-             <button type="button" id="tab_aircraft" class="nav-link" onclick="tabClicked('aircraft')">Aircraft</button>
+              <button type="button" id="tab_aircraft" class="nav-link" onclick="tabClicked('aircraft')">Aircraft</button>
            </li>
            <li class="nav-item">
-             <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flights</button>
+              <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flights</button>
            </li>
            <li class="nav-item">
-             <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
+              <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
            </li>
            <li class="nav-item">
-             <button type="button" id="tab_reports" class="nav-link" onclick="tabClicked('reports')">Reports</button>
+              <button type="button" id="tab_reports" class="nav-link" onclick="tabClicked('reports')">Reports</button>
+           </li>
+           <li class="nav-item">
+              <button type="button" id="tab_about" class="nav-link" onclick="tabClicked('about')">About</button>
            </li>
          </ul>
       </div>
@@ -121,6 +125,11 @@ function dashboardPanel()
 
 <div id="panel_dashboard" class="container d-block sm_panel"> <!-- start dashboard panel -->
 
+<div class="row">
+   <h3>System Totals</h3>
+   <hr>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-totals.html"></div>
+</div>
 <div class="row">
    <h3>Aircraft</h3>
    <hr>
@@ -299,6 +308,17 @@ function reportsPanel()
 ?>
 
 <div id="panel_reports" class="container d-none">
+</div>
+
+<?php
+}
+
+function aboutPanel()
+{
+?>
+
+<div id="panel_about" class="container d-none">
+   <img src="images/piaware-tools-background.png" />
 </div>
 
 <?php

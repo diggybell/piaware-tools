@@ -8,8 +8,8 @@
 
 include_once('autoload.php');
 include_once('autoconfig.php');
-include_once('../lib/statistics.php');
-include_once('../lib/split-flights.php');
+include_once('statistics.php');
+include_once('split-flights.php');
 
 use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
@@ -89,9 +89,10 @@ function updatePosition($db, $aircraftSeq, $timeStamp, $track)
         $recFlightTrack->set('aircraft_seq', $aircraftSeq);
         $recFlightTrack->set('time_stamp', splitPositionKey($timeStamp));
 
-        if(strlen($track['flight']))    $recFlightTrack->set('flight',    $track['flight']);
-        if(strlen($track['latitude']))  $recFlightTrack->set('latitude',  $track['latitude']);
-        if(strlen($track['longitude'])) $recFlightTrack->set('longitude', $track['longitude']);
+        if(strlen($track['flight']))    $recFlightTrack->set('flight',         $track['flight']);
+        if(strlen($track['category']))  $recFlightTrack->set('adsb_category',  $track['category']);
+        if(strlen($track['latitude']))  $recFlightTrack->set('latitude',       $track['latitude']);
+        if(strlen($track['longitude'])) $recFlightTrack->set('longitude',      $track['longitude']);
 
         $recFlightTrack->set('altitude',        (is_numeric($track['altitude']))        ? $track['altitude']        : 0);
         $recFlightTrack->set('geo_altitude',    (is_numeric($track['geo_altitude']))    ? $track['geo_altitude']    : 0);

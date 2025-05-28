@@ -9,10 +9,10 @@
 include_once('autoload.php');
 include_once('autoconfig.php');
 
-include_once('../lib/statistics.php');
-include_once('../lib/config.php');
-include_once('../lib/cardinals.php');
-include_once('../lib/icao.php');
+include_once('statistics.php');
+include_once('config.php');
+include_once('cardinals.php');
+include_once('icao.php');
 
 use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
@@ -199,6 +199,7 @@ function processAircraftExtract($receiver, $fileList)
                   $aircraftList[$aircraftKey]['positions'][$timestampKey] =
                   [
                      'flight'       => $aircraft->flight,
+                     'category'     => $aircraft->category,
                      'latitude'     => $aircraft->lat,
                      'longitude'    => $aircraft->lon,
                      'altitude'     => $aircraft->alt_baro,

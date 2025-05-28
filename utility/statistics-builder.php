@@ -8,8 +8,8 @@
 
 include_once('autoload.php');
 include_once('autoconfig.php');
-include_once('../lib/statistics.php');
-include_once('../lib/split-flights.php');
+include_once('statistics.php');
+include_once('split-flights.php');
 
 use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
@@ -230,7 +230,6 @@ function getCategoryFlights($db)
             WHERE
 	            a.adsb_category IS NOT NULL AND
                 DATE(f.first_seen) > DATE(DATE_SUB(NOW(), INTERVAL 7 DAY))
-
             GROUP BY
 	            DATE(f.first_seen),
 	            faa.GetADSBCategory(a.adsb_category)
@@ -285,7 +284,8 @@ function getTopFlightModels($db)
                         INNER JOIN flight f ON (a.aircraft_seq = f.aircraft_seq)
                         INNER JOIN faa.aircraft_details_view dv ON (a.icao_hex = dv.icao_hex)
                 WHERE
-                    a.adsb_category = '$category'
+                    a.adsb_category = '$category' AND
+                    f.first_seen > DATE_SUB(NOW(), INTERVAL 1 DAY)
                 GROUP BY
                     dv.aircraft_manufacturer,
                     dv.aircraft_model
@@ -295,6 +295,19 @@ function getTopFlightModels($db)
                     10";
         $ret[$category] = retrieveDetailResults($db, $sql);
     }
+    return $ret;
+}
+
+function getTotalRecordCounts($db)
+{
+    $ret = [];
+
+    $sql = "SELECT
+	            (SELECT COUNT(*) FROM aircraft) AS \"Total Aircraft\",
+                (SELECT COUNT(*) FROM flight) AS \"Total Flights\",
+                (SELECT COUNT(*) FROM flight_track) AS \"Total Flight Tracks\"";
+    $ret = ['Total Records' => retrieveDetailResults($db, $sql)[0]];
+
     return $ret;
 }
 
@@ -317,6 +330,7 @@ function main()
     if($db->connect())
     {
         $stats['generated'] = date('Y-m-d H:i:s');
+        $stats['system-totals']['totals'] = getTotalRecordCounts($db);
         $stats['system-totals']['aircraft'] = getSystemAircraftTotals($db);
         $stats['system-totals']['flights'] = getSystemFlightTotals($db);
         $stats['system-totals']['tracks'] = getSystemFlightTrackTotals($db);

@@ -1,33 +1,34 @@
 body {
-    background-color : lightgray;
-    color : black;
- }
+  background-color : lightgray;
+  color : black;
+}
  
- .pt-banner {
-    background-color: darkblue;
-    color: white;
-    height: 75px;
- }
- .container.div {
-    opacity : 0;
- }
+.pt-banner {
+  background-color: darkblue;
+  color: white;
+  height: 75px;
+}
 
- .text-large {
-   font-size: 100%;
- }
+.container.div {
+  opacity : 0;
+}
 
- .form-control, input, aux-control {
-   background-color : darkgray;
-   color : black;
- }
+.text-large {
+  font-size: 100%;
+}
 
- .navbtn {
-   height : 50px;
-   width : 60px;
- }
+.form-control, input, aux-control {
+  background-color : darkgray;
+  color : black;
+}
 
- table {
+.navbtn {
+  height : 50px;
+  width : 60px;
+}
+
+table {
   background-color : lightgray;
   color : black;
   font-size: 75%;
- }
+}

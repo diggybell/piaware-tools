@@ -16,7 +16,7 @@
 <body onload="initApplication()">
 <div class="container pt-banner">
    <div class="row">
-      <div class="md-col-12">
+      <div class="col col-md-12">
          <h2>PiAware Tools Dashboard</h2>
       </div>
    </div>
@@ -27,10 +27,10 @@ function getFormMarkup($elementName, $elementLabel, $elementClass='')
 {
    $markup = '
 <div class="row">            
-   <div class="col-md-4">
+   <div class="col col-md-4">
       <label for="' . $elementName . '" class="form-control ' . $elementClass . '">' . $elementLabel . '</label>
    </div>
-   <div class="col-md-8">
+   <div class="col col-md-8">
       <input id="' . $elementName . '" class="form-control fw-bold  ' . $elementClass . '" readonly />
    </div>
 </div>   
@@ -51,11 +51,12 @@ Logger::configure($config);
 Logger::setEnabled(true);
 
 navBar();
-graphsPanel();
 dashboardPanel();
 aircraftPanel();
 tracksPanel();
+graphsPanel();
 reportsPanel();
+aboutPanel();
 endPage();
 
 function navBar()
@@ -64,22 +65,25 @@ function navBar()
 
 <div class="container">
    <div class="row">
-      <div class="col-md-12">
+      <div class="col col-md-12">
          <ul class="nav nav-tabs">
             <li class="nav-item">
               <button type="button" id="tab_dashboard" class="nav-link active" onclick="tabClicked('dashboard')">Dashboard</button>
             </li>
            <li class="nav-item">
-             <button type="button" id="tab_aircraft" class="nav-link" onclick="tabClicked('aircraft')">Aircraft</button>
+              <button type="button" id="tab_aircraft" class="nav-link" onclick="tabClicked('aircraft')">Aircraft</button>
            </li>
            <li class="nav-item">
-             <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flights</button>
+              <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flights</button>
            </li>
            <li class="nav-item">
-             <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
+              <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
            </li>
            <li class="nav-item">
-             <button type="button" id="tab_reports" class="nav-link" onclick="tabClicked('reports')">Reports</button>
+              <button type="button" id="tab_reports" class="nav-link" onclick="tabClicked('reports')">Reports</button>
+           </li>
+           <li class="nav-item">
+              <button type="button" id="tab_about" class="nav-link" onclick="tabClicked('about')">About</button>
            </li>
          </ul>
       </div>
@@ -94,7 +98,7 @@ function controlBar()
 ?>
 
 <div id="buttons" class="row">
-   <div class="col-md-7">
+   <div class="col col-md-7">
          <input type="button" id="metro_start" value=">" class="btn btn-success navbtn" />
          <input type="button" id="metro_stop" value="||" class="btn btn-danger navbtn" />
          <label id="metro_label" for="metro_tempo">BPM</label>
@@ -102,7 +106,7 @@ function controlBar()
          <label id="set-label" for="set-number">Song</label>
          <input type="text" id="set-number" size="8" max-length="10" value="" readonly class="aux_control" />
    </div>
-   <div class="col-md-5">
+   <div class="col col-md-5">
       <span class="float-end">
          <input type="button" id="btn_prev" value="<<" class="btn btn-primary navbtn" />
          <input type="button" id="btn_next" value=">>" class="btn btn-primary navbtn" />
@@ -122,19 +126,24 @@ function dashboardPanel()
 <div id="panel_dashboard" class="container d-block sm_panel"> <!-- start dashboard panel -->
 
 <div class="row">
+   <h3>System Totals</h3>
+   <hr>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-totals.html"></div>
+</div>
+<div class="row">
    <h3>Aircraft</h3>
    <hr>
-   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-aircraft.html"></div>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-aircraft.html"></div>
 </div>
 <div class="row">
    <h3>Flights</h3>
    <hr>
-   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flights.html"></div>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flights.html"></div>
 </div>
 <div class="row">
    <h3>Flight Tracks</h3>
    <hr>
-   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-tracks.html"></div>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-tracks.html"></div>
 </div>
 
 </div> <!-- end of dashboard panel -->
@@ -152,15 +161,15 @@ function graphsPanel()
 <div class="row">
    <h3>Minimum Altitude for Range Rings</h3>
    <hr>
-   <div class="col-md-5 align-middle pt-dynamic-refresh" pt-external-content="graphs/altitude-graph.html"></div>
-   <div class="col-md-7 pt-dynamic-refresh" pt-external-content="graphs/altitude-table.html"></div>
+   <div class="col col-md-5 align-middle pt-dynamic-refresh" pt-external-content="graphs/altitude-graph.html"></div>
+   <div class="col col-md-7 pt-dynamic-refresh" pt-external-content="graphs/altitude-table.html"></div>
 </div>
 
 <div class="row">
    <h3>Maximum RSSI for Range Rings</h3>
    <hr>
-   <div class="col-md-5 align-middle pt-dynamic-refresh" pt-external-content="graphs/rssi-graph.html"></div>
-   <div class="col-md-7 pt-dynamic-refresh" pt-external-content="graphs/rssi-table.html"></div>
+   <div class="col col-md-5 align-middle pt-dynamic-refresh" pt-external-content="graphs/rssi-graph.html"></div>
+   <div class="col col-md-7 pt-dynamic-refresh" pt-external-content="graphs/rssi-table.html"></div>
 </div>
 </div> <!-- end of details panel -->
 
@@ -177,56 +186,56 @@ function aircraftPanel()
 <div class="row">
    <h3>ADS-B Category</h3>
    <hr>
-   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-adsb.html"></div>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-adsb.html"></div>
 </div>
 
 <div class="row">
    <h3>Registration Country</h3>
    <hr>
-   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-country.html"></div>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-country.html"></div>
 </div>
 
 <div class="row">
-   <h3> Top 10 </h3>
+   <h3>Top 10 Aircraft</h3>
    <hr>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Light (< 15,500lb)
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Small (15,500-75,000lb)
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Rotorcraft
       <hr>
    </div>
 </div>
 <div class="row">
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a1.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a2.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a1.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a2.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
 </div>
 
 <div class="row">
    <hr>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Large (75,000-300,000lb)
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       High Vortex
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Heavy (Over 300,000lb)
       <hr>
    </div>
 </div>
 <div class="row">
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a3.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a4.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a5.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a3.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a4.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a5.html"></div>
 </div>
 
 </div>
@@ -243,50 +252,50 @@ function tracksPanel()
 <div class="row">
    <h3>Flights By Category</h3>
    <hr>
-   <div class="col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-fltcat.html"></div>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-fltcat.html"></div>
 </div>
 
 <div class="row">
-   <h3> Top 10 </h3>
+   <h3>Top 10 by Flight Count</h3>
    <hr>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Light (< 15,500lb)
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Small (15,500-75,000lb)
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Rotorcraft
       <hr>
    </div>
 </div>
 <div class="row">
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a1.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a2.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a1.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a2.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
 </div>
 
 <div class="row">
    <hr>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Large (75,000-300,000lb)
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       High Vortex
       <hr>
    </div>
-   <div class="col-md-4 text-start">
+   <div class="col col-md-4 text-start">
       Heavy (Over 300,000lb)
       <hr>
    </div>
 </div>
 <div class="row">
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a3.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a4.html"></div>
-   <div class="col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a5.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a3.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a4.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a5.html"></div>
 </div>
 
 </div>
@@ -299,6 +308,17 @@ function reportsPanel()
 ?>
 
 <div id="panel_reports" class="container d-none">
+</div>
+
+<?php
+}
+
+function aboutPanel()
+{
+?>
+
+<div id="panel_about" class="container d-none">
+   <img src="images/piaware-tools-background.png" />
 </div>
 
 <?php
@@ -319,7 +339,7 @@ function endPage()
 ?>
 <div class="container">
 <div class="row">
-<div class="md-col-12">
+<div class="col col-md-12">
    <hr>
    <center><p>Copyright &copy; <?php print(date('Y')); ?> - Diggy Bell</p></center>
 </div>

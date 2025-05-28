@@ -217,7 +217,7 @@ INSERT INTO sda_category (id_code, description) VALUES
 ('0', '> 0.001'),
 ('1', '<= 0.001'),
 ('2', '<= 0.00001'),
-('3', '<= 0.000001');
+('3', '<= 0.0000001');
 
 DROP FUNCTION IF EXISTS GetSDACategory;
 DELIMITER $$

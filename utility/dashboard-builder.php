@@ -1,11 +1,47 @@
 <?php
 
+
+function normalizeDataSet(&$dataset)
+{
+    foreach($dataset as $row => $cols)
+    {
+        $rowIndex[$row] = 1;
+        foreach($cols as $col => $value)
+        {
+            $colIndex[$col] = 1;
+        }
+    }
+    $rowList = array_keys($rowIndex);
+    $colList = array_keys($colIndex);
+
+    ksort($rowList);
+    ksort($colList);
+
+    $newDataset = [];
+    foreach($rowList as $row)
+    {
+        foreach($colList as $col)
+        {
+            if(isset($dataset[$row][$col]))
+            {
+                $newDataset[$row][$col] = $dataset[$row][$col];
+            }
+            else
+            {
+                $newDataset[$row][$col] = '&nbsp;';
+            }
+        }
+    }
+
+    $dataset = $newDataset;
+}
+
 function statsTable($stats)
 {
     $ret = "<table class=\"table table-striped\">\n";
     $header = "<tr><th>&nbsp;</th>";
     $body   = "";
-
+normalizeDataSet($stats);
     $index = 0;
     foreach($stats as $action => $dailyTotals)
     {
@@ -128,6 +164,9 @@ $section = $opts['section'];
 $stats = json_decode(file_get_contents('../piaware-statistics.json'), true);
 switch($section)
 {
+    case 'totals':
+        $content = statsTable($stats['system-totals']['totals']);
+        break;
     case 'aircraft':
         $content = statsTable($stats['system-totals']['aircraft']);
         break;

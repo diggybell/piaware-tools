@@ -298,6 +298,19 @@ function getTopFlightModels($db)
     return $ret;
 }
 
+function getTotalRecordCounts($db)
+{
+    $ret = [];
+
+    $sql = "SELECT
+	            (SELECT COUNT(*) FROM aircraft) AS \"Total Aircraft\",
+                (SELECT COUNT(*) FROM flight) AS \"Total Flights\",
+                (SELECT COUNT(*) FROM flight_track) AS \"Total Flight Tracks\"";
+    $ret = ['Total Records' => retrieveDetailResults($db, $sql)[0]];
+
+    return $ret;
+}
+
 /**
     \brief Main entry point
 */
@@ -317,6 +330,7 @@ function main()
     if($db->connect())
     {
         $stats['generated'] = date('Y-m-d H:i:s');
+        $stats['system-totals']['totals'] = getTotalRecordCounts($db);
         $stats['system-totals']['aircraft'] = getSystemAircraftTotals($db);
         $stats['system-totals']['flights'] = getSystemFlightTotals($db);
         $stats['system-totals']['tracks'] = getSystemFlightTrackTotals($db);

@@ -146,6 +146,11 @@ function dashboardPanel()
    <hr>
    <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-tracks.html"></div>
 </div>
+<div class="row">
+   <h3>Process Status</h3>
+   <hr>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-process.html"></div>
+</div>
 
 </div> <!-- end of dashboard panel -->
 
@@ -334,7 +339,7 @@ all of the data that is presented on this page. This page is displaying statisti
 <p>
 If you would like to know more about FlightAware.com, PiAware, or PiAware Tools, here are some useful links.
 <ul>
-   <li><a href="www.flightaware.com">FlightAware.com</a></li>
+   <li><a href="https://www.flightaware.com">FlightAware.com</a></li>
    <li><a href="https://www.flightaware.com/adsb/piaware/">PiAware ADS-B Receiver</a></li>
    <li><a href="https://github.com/diggybell/piaware-tools">PiAware Tools at GitHub</a></li>
 </ul>

@@ -38,7 +38,7 @@ function getFormMarkup($elementName, $elementLabel, $elementClass='')
 
    return $markup;
 }
-
+/*
 include_once('autoload.php');
 include_once('autoconfig.php');
 
@@ -49,6 +49,7 @@ $cfg = getGlobalConfiguration();
 $config = $cfg->getSection('logging');
 Logger::configure($config);
 Logger::setEnabled(true);
+*/
 
 navBar();
 dashboardPanel();
@@ -251,12 +252,14 @@ function tracksPanel()
 
 <div class="row">
    <h3>Flights By Category</h3>
+   <p>7-day History</p>
    <hr>
    <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-fltcat.html"></div>
 </div>
 
 <div class="row">
    <h3>Top 10 by Flight Count</h3>
+   <p>24-hour Window</p>
    <hr>
    <div class="col col-md-4 text-start">
       Light (< 15,500lb)
@@ -308,6 +311,7 @@ function reportsPanel()
 ?>
 
 <div id="panel_reports" class="container d-none">
+   Under Construction
 </div>
 
 <?php
@@ -318,7 +322,23 @@ function aboutPanel()
 ?>
 
 <div id="panel_about" class="container d-none">
-   <img src="images/piaware-tools-background.png" />
+<p>
+PiAware Tools is a project that was born when three areas of interest merged. As a professional I have been in software and data technologies since 1988.
+In 1989 I got my private pilot's license but wasn't able to stay active due to family concerns. But my passion for aircraft never waned. Going way back
+to my 8-year old self I discovered radio and have spent way too much time tinkering with them. So what happens when they come together?
+</p>
+<p>
+Given the PiAware Tools name, I started playing with a FlightAware.com PiAware ADS-B receiver. Through out the May of 2025 I built the engine that is gathering
+all of the data that is presented on this page. This page is displaying statistics and status information for my PiAware receiver.
+</p>
+<p>
+If you would like to know more about FlightAware.com, PiAware, or PiAware Tools, here are some useful links.
+<ul>
+   <li><a href="www.flightaware.com">FlightAware.com</a></li>
+   <li><a href="https://www.flightaware.com/adsb/piaware/">PiAware ADS-B Receiver</a></li>
+   <li><a href="https://github.com/diggybell/piaware-tools">PiAware Tools at GitHub</a></li>
+</ul>
+</p>
 </div>
 
 <?php

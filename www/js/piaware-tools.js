@@ -75,17 +75,21 @@ function tabClicked(tabName)
 function dynamicRefresh() {
    document.querySelectorAll('.pt-dynamic-refresh').forEach(function (content){
       file = content.getAttribute('pt-external-content');
-      if(file != null)
-      {
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-         if (this.readyState == 4) {
-            if (this.status == 200) {content.innerHTML = this.responseText;}
-            if (this.status == 404) {content.innerHTML = "Page not found.";}
+      if(file != null) {
+         file += '?' + Date.now();
+         xhttp = new XMLHttpRequest();
+         xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+               if (this.status == 200) {
+                  content.innerHTML = this.responseText;
+               }
+               if (this.status == 404) {
+                  content.innerHTML = "Page not found.";
+               }
+            }
          }
-      }
-      xhttp.open("GET", file, true);
-      xhttp.send();
+         xhttp.open("GET", file, true);
+         xhttp.send();
       }
    });
 }

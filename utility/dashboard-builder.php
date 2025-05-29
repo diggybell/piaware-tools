@@ -151,7 +151,7 @@ function getProcessStats()
                 $details[$tag] = $value;
             }
         }
-print_r($details);
+
         $detailsString = '';
         if(is_array($details))
         {

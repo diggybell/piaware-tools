@@ -172,7 +172,7 @@ function outputTable($map)
 
    return $ret;
 }
-function outputPage($content)
+function outputPage($content, $legend, $legendTitle)
 {
    $ret = '';
 
@@ -186,7 +186,13 @@ function outputPage($content)
    <meta charset="utf-8">
 </head>
 <body>
-{$content}
+<div class="graph-content">
+   {$content}
+</div>
+<div class="graph-legend">
+   <p>{$legendTitle}</p>
+   {$legend}
+</div>
 </body>
 </html>
 HTML;
@@ -235,9 +241,13 @@ function main($date, $graph)
    {
       case 'altitude':
          loadAltitudeData($db, $map, $date);
+         $legend = altitudeLegend();
+         $legendTitle = "Altitude in 1,000's of Feet";
          break;
       case 'rssi':
          loadRSSIData($db, $map, $date);
+         $legend = percentageLegend(['-50', '-40', '-30', '-20', '-10', '0' ]);
+         $legendTitle = "RSSI in dB";
          break;
       default:
          printf("Invalid graph\n");
@@ -245,11 +255,11 @@ function main($date, $graph)
    }
 
    $svg = createPolarSVG($map, 200, 200, $ringWidth, $ringCount);
-   $output = outputPage($svg);
+   $output = outputPage($svg, $legend, $legendTitle);
    file_put_contents('../www/graphs/' . $graph . '-graph.html', $output);
 
    $table = outputTable($map);
-   $output = outputPage($table);
+   $output = outputPage($table, '', '');
    file_put_contents('../www/graphs/' . $graph . '-table.html', $output);
 }
 

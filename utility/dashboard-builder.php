@@ -1,5 +1,6 @@
 <?php
 
+include_once('config.php');
 
 function normalizeDataSet(&$dataset)
 {
@@ -41,8 +42,9 @@ function statsTable($stats)
     $ret = "<table class=\"table table-striped\">\n";
     $header = "<tr><th>&nbsp;</th>";
     $body   = "";
-normalizeDataSet($stats);
     $index = 0;
+
+    normalizeDataSet($stats);
     foreach($stats as $action => $dailyTotals)
     {
         $body .= sprintf("<tr><td>%s</td>", $action);
@@ -120,6 +122,60 @@ HTML;
    return $ret;
 }
 
+function getProcessStats()
+{
+    $processStats = [];
+    $fileList = [];
+
+    $dir = opendir(RUNTIME_PATH);
+    if($dir)
+    {
+        while($entry = readdir($dir))
+        {
+            if(!is_dir(RUNTIME_PATH . $entry))
+            {
+                $fileList[] = $entry;
+            }
+        }
+    }
+
+    foreach($fileList as $fileName)
+    {
+        $stats = json_decode(file_get_contents(RUNTIME_PATH . $fileName), true);
+
+        $details = [];
+        foreach($stats as $tag => $value)
+        {
+            if(substr($tag, 0, 6) !== 'system')
+            {
+                $details[$tag] = $value;
+            }
+        }
+
+        $detailsString = '';
+        if(is_array($details))
+        {
+            foreach($details as $tag => $name)
+            {
+                if(strlen($detailsString))
+                {
+                    $detailsString .= '<br />';
+                }
+                $detailsString .= sprintf("%s = %d\n", $tag, $name);
+            }
+        }
+        $processStats[] =
+        [
+            "Application" => $stats['system-app-name'],
+            'Start' => $stats['system-start-time'],
+            'End' => $stats['system-end-time'],
+            'Elapsed' => $stats['system-elapsed-time'],
+            'Details' => $detailsString
+        ];
+    }
+
+    return statsTable($processStats);
+}
 /**
    \brief Display usage and help information
 */
@@ -166,6 +222,9 @@ switch($section)
 {
     case 'totals':
         $content = statsTable($stats['system-totals']['totals']);
+        break;
+    case 'process':
+        $content = getProcessStats();
         break;
     case 'aircraft':
         $content = statsTable($stats['system-totals']['aircraft']);

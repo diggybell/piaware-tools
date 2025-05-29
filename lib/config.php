@@ -12,3 +12,4 @@ define('RECEIVER_FILE', DATAPATH . 'receiver.json');            ///< The PiAware
 define('ICAOHEX_FILE', BASEPATH . '/json/icao-decode.json');    ///< The ICAO Hex to country mapping used to determine aircraft registration country
 define('ADSBCAT_FILE', BASEPATH . '/json/adsb-category.json');  ///< The aircraft category values used in ADS-B
 define('FLIGHT_BOUNDARY', 60 * 30);                             ///< The number of minutes that split a set of tracks for an aircraft into flights
+define('RUNTIME_PATH', BASEPATH . '/run/');                     ///< The directory where runtime status for background process will be written

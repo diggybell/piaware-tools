@@ -33,6 +33,7 @@ php statistics-builder.php
 
 #
 # Generate the tables for the dashboard
+php dashboard-builder.php --section=totals
 php dashboard-builder.php --section=aircraft
 php dashboard-builder.php --section=flights
 php dashboard-builder.php --section=tracks

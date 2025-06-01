@@ -1,6 +1,6 @@
 var refreshTimer;
 
-refreshTimer = setInterval(refreshContent, 10000);
+refreshTimer = setInterval(refreshContent, 60000);
 
 function initApplication()
 {
@@ -92,4 +92,9 @@ function dynamicRefresh() {
          xhttp.send();
       }
    });
+   updatePara = document.getElementById('lastUpdated');
+   if(updatePara != null) {
+      date = new Date();
+      updatePara.innerHTML = 'Last Update: ' + date.toLocaleDateString() + ' @ ' + date.toLocaleTimeString();
+   }
 }

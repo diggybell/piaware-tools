@@ -16,8 +16,12 @@
 <body onload="initApplication()">
 <div class="container pt-banner">
    <div class="row">
-      <div class="col col-md-12">
-         <h2>PiAware Tools Dashboard</h2>
+      <div class="col col-md-8">
+         <h3>PiAware Tools Dashboard</h3>
+         <p id="lastUpdated"></p>
+      </div>
+      <div class="col col-md-4 float-end">
+         <img src="images/piaware-tools-background.png" class="float-end" />
       </div>
    </div>
 </div>      
@@ -327,6 +331,8 @@ function aboutPanel()
 ?>
 
 <div id="panel_about" class="container d-none">
+<div>
+<h2>About PiAware Tools</h2>
 <p>
 PiAware Tools is a project that was born when three areas of interest merged. As a professional I have been in software and data technologies since 1988.
 In 1989 I got my private pilot's license but wasn't able to stay active due to family concerns. But my passion for aircraft never waned. Going way back
@@ -338,12 +344,48 @@ all of the data that is presented on this page. This page is displaying statisti
 </p>
 <p>
 If you would like to know more about FlightAware.com, PiAware, or PiAware Tools, here are some useful links.
+
 <ul>
    <li><a href="https://www.flightaware.com">FlightAware.com</a></li>
    <li><a href="https://www.flightaware.com/adsb/piaware/">PiAware ADS-B Receiver</a></li>
    <li><a href="https://github.com/diggybell/piaware-tools">PiAware Tools at GitHub</a></li>
 </ul>
 </p>
+</div>
+<div>
+<h3>License</h3>
+<p>
+BSD 2-Clause License
+</p>
+<p>
+Copyright (c) 2025, Diggy Bell
+</p>
+<p>
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+</p>
+<p>
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+</p>
+<p>
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+</p>
+<p>
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.      
+</p>
+</div>
 </div>
 
 <?php

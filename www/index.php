@@ -16,8 +16,12 @@
 <body onload="initApplication()">
 <div class="container pt-banner">
    <div class="row">
-      <div class="col col-md-12">
+      <div class="col col-md-8">
          <h3>PiAware Tools Dashboard</h3>
+         <p id="lastUpdated"></p>
+      </div>
+      <div class="col col-md-4 float-end">
+         <img src="images/piaware-tools-background.png" class="float-end" />
       </div>
    </div>
 </div>      

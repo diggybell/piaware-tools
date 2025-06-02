@@ -17,7 +17,34 @@ use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
 use \DigTech\Database\Record as Record;
 
-/*
+/**
+   \brief Validate the minimum altitude for each ring to make sure it is sane
+   \param $ring The range ring the altitude was seen in
+   \param $altitude The altitude being validated
+   \returns Whether or not the altitude is above a 'sane' minimum (see average-altitudes.php)
+*/
+function isValidAltitude($ring, $altitude)
+{
+   $minimums =
+   [
+      500,     // 50 nm
+      1000,    // 100 nm
+      5000,    // 150 nm
+      10000,   // 200 nm
+      15000,   // 250 nm
+      20000    // 250+ nm
+   ];
+
+   if($altitude < $minimums[$ring])
+   {
+
+      return false;
+   }
+
+   return true;
+}
+
+/**
    \brief Load minimum altitude data from the database
    \param $db Database connection
    \param $map Initialized polar map
@@ -38,7 +65,6 @@ function loadAltitudeData($db, &$map, $date)
          FROM
             flight_track
          WHERE
-            ValidAltitude(altitude, ring) AND
             DATE(create_date) = '%s') AS altitude_keys
       GROUP BY
          cardinal,
@@ -57,6 +83,12 @@ function loadAltitudeData($db, &$map, $date)
          while($row = $db->fetch($res))
          {
             list($cardinal, $ring, $altitude, $distance) = sscanf($row['sort_key'], "%s %d %d %d");
+
+            // just a sanity check to filter erroneous data
+            if(isValidAltitude($altitude))
+            {
+               continue;
+            }
 
             $cardinalIndex = getCardinalIndex($cardinal);
 

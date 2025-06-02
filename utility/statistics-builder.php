@@ -1,7 +1,7 @@
 <?php
 
 /**
-    \file flight-builder.php
+    \file statistics-builder.php
     \brief This script processes positions and builds virtual flights based on timestamps
     \ingroup PiAwareTools
 */

@@ -2,7 +2,7 @@ USE faa;
 
 DROP VIEW IF EXISTS aircraft_details_view;
 CREATE VIEW aircraft_details_view AS
-SELECT m.n_number,
+SELECT CONCAT('N', m.n_number) AS n_number,
        m.mode_s_code_hex AS icao_hex,
        m.name,
        faa.GetRegistrantType(type_registrant) AS registrant_type,

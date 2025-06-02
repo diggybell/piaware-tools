@@ -27,12 +27,12 @@ function isValidAltitude($ring, $altitude)
 {
    $minimums =
    [
-      500,     // 50 nm
+      100,     // 50 nm
       1000,    // 100 nm
-      5000,    // 150 nm
-      10000,   // 200 nm
-      15000,   // 250 nm
-      20000    // 250+ nm
+      2000,    // 150 nm
+      5000,    // 200 nm
+      10000,   // 250 nm
+      15000    // 250+ nm
    ];
 
    if($altitude < $minimums[$ring])
@@ -65,7 +65,8 @@ function loadAltitudeData($db, &$map, $date)
          FROM
             flight_track
          WHERE
-            DATE(create_date) = '%s') AS altitude_keys
+            DATE(create_date) = '%s' AND
+            altitude > 0) AS altitude_keys
       GROUP BY
          cardinal,
          ring
@@ -87,7 +88,7 @@ function loadAltitudeData($db, &$map, $date)
             // just a sanity check to filter erroneous data
             if(!isValidAltitude($ring, $altitude))
             {
-               continue;
+               //continue;
             }
 
             $cardinalIndex = getCardinalIndex($cardinal);

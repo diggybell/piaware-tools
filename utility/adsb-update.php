@@ -64,7 +64,7 @@ function updateAircraft($db, $aircraft)
     return $recAircraft->get('aircraft_seq');
 }
 
-/*
+/**
     \brief Update a track in the database
     \param $db Database connection
     \param $aircraftSeq The sequence number for the aircraft

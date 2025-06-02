@@ -1,7 +1,18 @@
 <?php
 
+/**
+    \file dashboard-builder.php
+    \brief Build static html segments
+    \ingroup Intel
+*/
+
 include_once('config.php');
 
+/**
+    \brief Normalize dataset to ensure proper table construction
+    \param $dataset The dataset to be normalized
+    \returns Normalized dataset
+*/
 function normalizeDataSet(&$dataset)
 {
     foreach($dataset as $row => $cols)
@@ -37,6 +48,11 @@ function normalizeDataSet(&$dataset)
     $dataset = $newDataset;
 }
 
+/**
+    \brief Create table markup for two dimensions
+    \param $stats Table data to be output
+    \returns HTML string for table
+*/
 function statsTable($stats)
 {
     $ret = "<table class=\"table table-striped\">\n";
@@ -69,6 +85,11 @@ function statsTable($stats)
     return $ret;
 }
 
+/**
+    \brief Create table markup for one dimension
+    \param $dataset Table data to be output
+    \returns HTML string for table
+*/
 function detailTable($stats)
 {
     $ret = "<table class=\"table table-striped\">\n";
@@ -99,6 +120,12 @@ function detailTable($stats)
 
     return $ret;
 }
+
+/**
+    \brief Output the table data with full HTML page
+    \param $content The content element being output
+    \returns HTML content as a string
+*/
 function outputPage($content)
 {
    $ret = '';
@@ -122,6 +149,10 @@ HTML;
    return $ret;
 }
 
+/*
+    \brief Get the statistics for running processes
+    \returns Table market for process status
+*/
 function getProcessStats()
 {
     $processStats = [];

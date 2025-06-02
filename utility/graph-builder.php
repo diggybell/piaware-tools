@@ -109,7 +109,7 @@ function loadAltitudeData($db, &$map, $date)
    }
 }
 
-/*
+/**
    \brief Load maximum rssi data from the database
    \param $db Database connection
    \param $map Initialized polar map
@@ -204,6 +204,13 @@ function outputTable($map)
 
    return $ret;
 }
+
+/**
+   \brief Create full HTML page as a string
+   \param $content The graph content to be presented
+   \param $legend The markeup for the graph legend
+   \param $legendTitle The title to be put on the legend
+*/
 function outputPage($content, $legend, $legendTitle)
 {
    $ret = '';
@@ -231,6 +238,7 @@ HTML;
 
    return $ret;
 }
+
 /**
    \brief Display usage and help information
 */
@@ -252,9 +260,11 @@ Available Graphs
 <?php
 }
 
-//
-// main application code
-//
+/*
+   \brief Main entry point
+   \param $date The data to generate the graph for
+   \param $graph The graph type to be generated
+*/
 function main($date, $graph)
 {
    $cfg = getGlobalConfiguration();

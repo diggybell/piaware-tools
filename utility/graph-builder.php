@@ -85,7 +85,7 @@ function loadAltitudeData($db, &$map, $date)
             list($cardinal, $ring, $altitude, $distance) = sscanf($row['sort_key'], "%s %d %d %d");
 
             // just a sanity check to filter erroneous data
-            if(isValidAltitude($altitude))
+            if(!isValidAltitude($ring, $altitude))
             {
                continue;
             }

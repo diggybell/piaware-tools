@@ -1,5 +1,10 @@
 <?php
 
+/**
+   \file bar.php
+   \ingroup Lib
+   \brief A collection of functions and data for bar charts
+*/
 /*
 Bar Chart Notes
 
@@ -40,7 +45,7 @@ function scaleRangeValue($value, $fromLow, $fromHigh, $toLow, $toHigh)
     \param $data The dataset to be analyzed
     \param $maxX The maximum X value
     \param $maxY The maxinum Y value
-    \param The margin to be allowed
+    \param $margin The margin to be allowed
     \returns Array containing graph parameters
 */
 function getGraphParameters($data, $maxX, $maxY, $margin)

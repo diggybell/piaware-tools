@@ -87,7 +87,7 @@ function statsTable($stats)
 
 /**
     \brief Create table markup for one dimension
-    \param $dataset Table data to be output
+    \param $stats Table data to be output
     \returns HTML string for table
 */
 function detailTable($stats)

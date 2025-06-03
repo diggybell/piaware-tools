@@ -26,6 +26,8 @@ CREATE INDEX icao_ndx
     ON aircraft(icao_hex);
 CREATE INDEX tail_ndx
     ON aircraft(n_number);
+CREATE INDEX adsb_cat_ndx
+    ON aircraft(adsb_category);
 CREATE INDEX aircraft_create_ndx
     ON aircraft(create_date);
 CREATE INDEX aircraft_modify_ndx

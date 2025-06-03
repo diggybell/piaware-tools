@@ -287,8 +287,23 @@ switch($section)
     case 'top10a5':
         $content = detailTable($stats['aircraft-top-10']['A5']);
         break;
+    case 'top10a6':
+        $content = detailTable($stats['aircraft-top-10']['A6']);
+        break;
     case 'top10a7':
         $content = detailTable($stats['aircraft-top-10']['A7']);
+        break;
+    case 'top10b1':
+        $content = detailTable($stats['aircraft-top-10']['B1']);
+        break;
+    case 'top10b2':
+        $content = detailTable($stats['aircraft-top-10']['B2']);
+        break;
+    case 'top10b3':
+        $content = detailTable($stats['aircraft-top-10']['B3']);
+        break;
+    case 'top10b4':
+        $content = detailTable($stats['aircraft-top-10']['B4']);
         break;
     case 'fltcat':
         $content = statsTable($stats['flight-category']);
@@ -308,8 +323,23 @@ switch($section)
     case 'flttop10a5':
         $content = detailTable($stats['flight-top-10']['A5']);
         break;
+    case 'flttop10a6':
+        $content = detailTable($stats['flight-top-10']['A6']);
+        break;
     case 'flttop10a7':
         $content = detailTable($stats['flight-top-10']['A7']);
+        break;
+    case 'flttop10b1':
+        $content = detailTable($stats['flight-top-10']['B1']);
+        break;
+    case 'flttop10b2':
+        $content = detailTable($stats['flight-top-10']['B2']);
+        break;
+    case 'flttop10b3':
+        $content = detailTable($stats['flight-top-10']['B3']);
+        break;
+    case 'flttop10b4':
+        $content = detailTable($stats['flight-top-10']['B4']);
         break;
     default:
         break;
@@ -317,5 +347,3 @@ switch($section)
 
 $fileName = sprintf("../www/graphs/dashboard-%s.html", $section);
 file_put_contents($fileName, outputPage($content));
-
-?>

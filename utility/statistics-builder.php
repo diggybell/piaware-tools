@@ -231,7 +231,7 @@ function getTopCountryTotals($db)
 function getTopAircraftModels($db)
 {
     $ret = [];
-    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A7' ];
+    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'B1', 'B2', 'B3', 'B4' ];
 
     foreach($categoryList as $category)
     {
@@ -322,7 +322,7 @@ function getCategoryFlights($db)
 function getTopFlightModels($db)
 {
     $ret = [];
-    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A7' ];
+    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'B1', 'B2', 'B3', 'B4' ];
 
     foreach($categoryList as $category)
     {

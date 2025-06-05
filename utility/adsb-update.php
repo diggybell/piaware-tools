@@ -64,7 +64,7 @@ function updateAircraft($db, $aircraft)
     return $recAircraft->get('aircraft_seq');
 }
 
-/*
+/**
     \brief Update a track in the database
     \param $db Database connection
     \param $aircraftSeq The sequence number for the aircraft
@@ -94,15 +94,15 @@ function updatePosition($db, $aircraftSeq, $timeStamp, $track)
         if(strlen($track['latitude']))  $recFlightTrack->set('latitude',       $track['latitude']);
         if(strlen($track['longitude'])) $recFlightTrack->set('longitude',      $track['longitude']);
 
-        $recFlightTrack->set('altitude',        (is_numeric($track['altitude']))        ? $track['altitude']        : 0);
-        $recFlightTrack->set('geo_altitude',    (is_numeric($track['geo_altitude']))    ? $track['geo_altitude']    : 0);
-        $recFlightTrack->set('heading',         (is_numeric($track['heading']))         ? $track['heading']         : 0);
-        $recFlightTrack->set('climb_rate',      (is_numeric($track['climb_rate']))      ? $track['climb_rate']      : 0);
-        $recFlightTrack->set('transponder',     (is_numeric($track['transponder']))     ? $track['transponder']     : 0);
-        $recFlightTrack->set('qnh',             (is_numeric($track['qnh']))             ? $track['qnh']             : 0);
-        $recFlightTrack->set('groundspeed',     (is_numeric($track['groundspeed']))     ? $track['groundspeed']     : 0);
-        $recFlightTrack->set('track',           (is_numeric($track['track']))           ? $track['track']           : 0);
-        $recFlightTrack->set('rssi',            (is_numeric($track['rssi']))            ? $track['rssi']            : 0);
+        $recFlightTrack->set('altitude',        (is_numeric($track['altitude']))        ? $track['altitude']        : -1);
+        $recFlightTrack->set('geo_altitude',    (is_numeric($track['geo_altitude']))    ? $track['geo_altitude']    : -1);
+        $recFlightTrack->set('heading',         (is_numeric($track['heading']))         ? $track['heading']         : -1);
+        $recFlightTrack->set('climb_rate',      (is_numeric($track['climb_rate']))      ? $track['climb_rate']      : -1);
+        $recFlightTrack->set('transponder',     (is_numeric($track['transponder']))     ? $track['transponder']     : -1);
+        $recFlightTrack->set('qnh',             (is_numeric($track['qnh']))             ? $track['qnh']             : -1);
+        $recFlightTrack->set('groundspeed',     (is_numeric($track['groundspeed']))     ? $track['groundspeed']     : -1);
+        $recFlightTrack->set('track',           (is_numeric($track['track']))           ? $track['track']           : -1);
+        $recFlightTrack->set('rssi',            (is_numeric($track['rssi']))            ? $track['rssi']            : -1);
 
         // value of -1 indicates this value was missing
         $recFlightTrack->set('nic',             (is_numeric($track['nic']))             ? $track['nic']             : -1);

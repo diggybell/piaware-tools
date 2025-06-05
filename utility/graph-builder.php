@@ -17,7 +17,34 @@ use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
 use \DigTech\Database\Record as Record;
 
-/*
+/**
+   \brief Validate the minimum altitude for each ring to make sure it is sane
+   \param $ring The range ring the altitude was seen in
+   \param $altitude The altitude being validated
+   \returns Whether or not the altitude is above a 'sane' minimum (see average-altitudes.php)
+*/
+function isValidAltitude($ring, $altitude)
+{
+   $minimums =
+   [
+      100,     // 50 nm
+      1000,    // 100 nm
+      2000,    // 150 nm
+      5000,    // 200 nm
+      10000,   // 250 nm
+      15000    // 250+ nm
+   ];
+
+   if($altitude < $minimums[$ring])
+   {
+
+      return false;
+   }
+
+   return true;
+}
+
+/**
    \brief Load minimum altitude data from the database
    \param $db Database connection
    \param $map Initialized polar map
@@ -38,8 +65,8 @@ function loadAltitudeData($db, &$map, $date)
          FROM
             flight_track
          WHERE
-            ValidAltitude(altitude, ring) AND
-            DATE(create_date) = '%s') AS altitude_keys
+            DATE(create_date) = '%s' AND
+            altitude > 0) AS altitude_keys
       GROUP BY
          cardinal,
          ring
@@ -57,6 +84,12 @@ function loadAltitudeData($db, &$map, $date)
          while($row = $db->fetch($res))
          {
             list($cardinal, $ring, $altitude, $distance) = sscanf($row['sort_key'], "%s %d %d %d");
+
+            // just a sanity check to filter erroneous data
+            if(!isValidAltitude($ring, $altitude))
+            {
+               //continue;
+            }
 
             $cardinalIndex = getCardinalIndex($cardinal);
 
@@ -77,7 +110,7 @@ function loadAltitudeData($db, &$map, $date)
    }
 }
 
-/*
+/**
    \brief Load maximum rssi data from the database
    \param $db Database connection
    \param $map Initialized polar map
@@ -172,6 +205,13 @@ function outputTable($map)
 
    return $ret;
 }
+
+/**
+   \brief Create full HTML page as a string
+   \param $content The graph content to be presented
+   \param $legend The markeup for the graph legend
+   \param $legendTitle The title to be put on the legend
+*/
 function outputPage($content, $legend, $legendTitle)
 {
    $ret = '';
@@ -199,6 +239,7 @@ HTML;
 
    return $ret;
 }
+
 /**
    \brief Display usage and help information
 */
@@ -220,9 +261,11 @@ Available Graphs
 <?php
 }
 
-//
-// main application code
-//
+/*
+   \brief Main entry point
+   \param $date The data to generate the graph for
+   \param $graph The graph type to be generated
+*/
 function main($date, $graph)
 {
    $cfg = getGlobalConfiguration();

@@ -25,6 +25,9 @@ register_shutdown_function('outputStatistics');
 $globalRuntimeFile = sprintf("%ssystem-stats-%s.json", RUNTIME_PATH, $argv[0]);
 file_put_contents($globalRuntimeFile, json_encode($runtimeStatistics, JSON_PRETTY_PRINT));
 
+/*
+    \brief Output statistics to log file
+*/
 function outputStatistics()
 {
     global $runtimeStatistics;

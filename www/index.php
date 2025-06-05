@@ -217,14 +217,14 @@ function aircraftPanel()
       <hr>
    </div>
    <div class="col col-md-4 text-start">
-      Rotorcraft
+      High Performance > 5g and 400kt
       <hr>
    </div>
 </div>
 <div class="row">
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a1.html"></div>
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a2.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a6.html"></div>
 </div>
 
 <div class="row">
@@ -246,6 +246,27 @@ function aircraftPanel()
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a3.html"></div>
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a4.html"></div>
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a5.html"></div>
+</div>
+
+<div class="row">
+   <hr>
+   <div class="col col-md-4 text-start">
+      Rotorcraft
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      Glider/Sailplane
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      Airship/Balloon
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b1.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b2.html"></div>
 </div>
 
 </div>
@@ -279,14 +300,14 @@ function tracksPanel()
       <hr>
    </div>
    <div class="col col-md-4 text-start">
-      Rotorcraft
+      High Performance > 5g and 400kt
       <hr>
    </div>
 </div>
 <div class="row">
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a1.html"></div>
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a2.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a6.html"></div>
 </div>
 
 <div class="row">
@@ -308,6 +329,27 @@ function tracksPanel()
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a3.html"></div>
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a4.html"></div>
    <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a5.html"></div>
+</div>
+
+<div class="row">
+   <hr>
+   <div class="col col-md-4 text-start">
+      Rotorcraft
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      Glider/Sailplane
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      Airship/Balloon
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b1.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b2.html"></div>
 </div>
 
 </div>

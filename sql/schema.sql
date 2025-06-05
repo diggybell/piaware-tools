@@ -26,6 +26,12 @@ CREATE INDEX icao_ndx
     ON aircraft(icao_hex);
 CREATE INDEX tail_ndx
     ON aircraft(n_number);
+CREATE INDEX adsb_cat_ndx
+    ON aircraft(adsb_category);
+CREATE INDEX aircraft_create_ndx
+    ON aircraft(create_date);
+CREATE INDEX aircraft_modify_ndx
+    ON aircraft(modify_date);
 
 CREATE TABLE flight
 (
@@ -50,6 +56,10 @@ CREATE INDEX flight_start_ndx
     ON flight(aircraft_seq, first_seen);
 CREATE INDEX flight_number_ndx
     ON flight(flight);
+CREATE INDEX flight_create_ndx
+    ON flight(create_date);
+CREATE INDEX flight_modify_ndx
+    ON flight(modify_date);
 
 CREATE TABLE flight_track
 (
@@ -105,3 +115,7 @@ CREATE INDEX flight_time_ndx
     ON flight_track(flight_seq, time_stamp);
 CREATE INDEX flight_link_ndx
     ON flight_track(aircraft_seq, flight_linked);
+CREATE INDEX flight_track_create_ndx
+    ON flight_track(create_date);
+CREATE INDEX flight_track_modify_ndx
+    ON flight_track(modify_date);

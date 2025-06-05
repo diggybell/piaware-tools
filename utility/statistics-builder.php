@@ -1,7 +1,7 @@
 <?php
 
 /**
-    \file flight-builder.php
+    \file statistics-builder.php
     \brief This script processes positions and builds virtual flights based on timestamps
     \ingroup PiAwareTools
 */
@@ -15,7 +15,12 @@ use \DigTech\Logging\Logger as Logger;
 use \DigTech\Database\MySQL as MyDB;
 use \DigTech\Database\Record as Record;
 
-
+/**
+    \brief Retrieve simple summary results as one dimensional array
+    \param $db Database connection
+    \param $sql SQL statement to execute
+    \returns Result set as an array
+*/
 function retrieveSummaryResults($db, $sql)
 {
     $ret = [];
@@ -33,6 +38,12 @@ function retrieveSummaryResults($db, $sql)
     return $ret;
 }
 
+/**
+    \brief Retrieve detail results as two dimensional array
+    \param $db Database connection
+    \param $sql SQL statement to execute
+    \returns Result set as an array
+*/
 function retrieveDetailResults($db, $sql)
 {
     $ret = [];
@@ -50,6 +61,11 @@ function retrieveDetailResults($db, $sql)
     return $ret;
 }
 
+/**
+    \brief Retrieve aircraft totals for created/modified
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getSystemAircraftTotals($db)
 {
     $ret = [];
@@ -83,6 +99,11 @@ function getSystemAircraftTotals($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve flight totals for created/modified
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getSystemFlightTotals($db)
 {
     $ret = [];
@@ -116,6 +137,11 @@ function getSystemFlightTotals($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve flight track totals for created/modified
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getSystemFlightTrackTotals($db)
 {
     $ret = [];
@@ -150,6 +176,11 @@ function getSystemFlightTrackTotals($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve ADS-B category totals
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getADSBCategoryTotals($db)
 {
     $ret = [];
@@ -168,6 +199,11 @@ function getADSBCategoryTotals($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve top 10 country totals
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getTopCountryTotals($db)
 {
     $ret = [];
@@ -187,10 +223,15 @@ function getTopCountryTotals($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve top 10 aircraft model totals
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getTopAircraftModels($db)
 {
     $ret = [];
-    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A7' ];
+    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'B1', 'B2', 'B3', 'B4' ];
 
     foreach($categoryList as $category)
     {
@@ -215,6 +256,11 @@ function getTopAircraftModels($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve flight totals for 7-day window
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getCategoryFlights($db)
 {
     $ret = [];
@@ -268,10 +314,15 @@ function getCategoryFlights($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve top 10 flight model totals
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getTopFlightModels($db)
 {
     $ret = [];
-    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A7' ];
+    $categoryList = [ 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'B1', 'B2', 'B3', 'B4' ];
 
     foreach($categoryList as $category)
     {
@@ -298,6 +349,11 @@ function getTopFlightModels($db)
     return $ret;
 }
 
+/**
+    \brief Retrieve total record counts for system
+    \param $db Database connection
+    \returns Result set as an array
+*/
 function getTotalRecordCounts($db)
 {
     $ret = [];

@@ -15,7 +15,7 @@ define('ICAO_OFFSET', 0xA00001);                            ///< Start of ICAO a
 define('GROUP1', 101711);                                   ///< Group 1 to control conversion between ICAO/N-number
 define('GROUP2', 10111);                                    ///< Group 2 to control conversion between ICAO/N-number
 
-$icaoCountryMap = null; ///< global ICAO hex code range for country
+$icaoCountryMap = null;                                     ///< global ICAO hex code range for country
 
 /**
     \brief Get the country from the ICAO Hex code

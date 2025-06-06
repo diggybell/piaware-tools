@@ -80,7 +80,7 @@ CREATE TABLE flight_track
     groundspeed             NUMERIC(6,1),
     track                   NUMERIC(5,2),
     nic                     SMALLINT,
-    rc                      SMALLINT,
+    rc                      INTEGER,
     nac_p                   SMALLINT,
     nac_v                   SMALLINT,
     sil                     SMALLINT,

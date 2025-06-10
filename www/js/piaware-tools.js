@@ -47,7 +47,7 @@ function getRestAPI(url, method, payload=null, callback=null)
 
 function tabClicked(tabName)
 {
-   tabs = ['dashboard','aircraft','tracks','graphs','military', 'about'];
+   tabs = ['dashboard','aircraft','tracks','graphs','dod-aircraft','dod-flight', 'about'];
    
    tabs.forEach(
       function(tab)

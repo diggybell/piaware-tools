@@ -302,7 +302,7 @@ function dodAircraftPanel()
       <hr>
    </div>
    <div class="col col-md-4 text-start">
-      High
+      High Performance
       <hr>
    </div>
 </div>

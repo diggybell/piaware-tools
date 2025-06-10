@@ -60,8 +60,14 @@ dashboardPanel();
 aircraftPanel();
 tracksPanel();
 graphsPanel();
-dodAircraftPanel();
-dodFlightPanel();
+if(file_exists('graphs/dod-dashboard-adsb.html'))
+{
+   dodAircraftPanel();
+}
+if(file_exists('graphs/dod-dashboard-fltcat.html'))
+{
+   dodFlightPanel();
+}
 aboutPanel();
 endPage();
 
@@ -82,12 +88,16 @@ function navBar()
            <li class="nav-item">
               <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flights</button>
            </li>
+<?php if(file_exists('graphs/dod-dashboard-adsb.html')) { ?>
            <li class="nav-item">
               <button type="button" id="tab_dod-aircraft" class="nav-link" onclick="tabClicked('dod-aircraft')">DoD Aircraft</button>
            </li>
+<?php } ?>
+<?php if(file_exists('graphs/dod-dashboard-fltcat.html')) { ?>
            <li class="nav-item">
               <button type="button" id="tab_dod-flight" class="nav-link" onclick="tabClicked('dod-flight')">DoD Flights</button>
            </li>
+<?php } ?>
            <li class="nav-item">
               <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
            </li>

@@ -60,7 +60,7 @@ dashboardPanel();
 aircraftPanel();
 tracksPanel();
 graphsPanel();
-reportsPanel();
+militaryPanel();
 aboutPanel();
 endPage();
 
@@ -82,10 +82,10 @@ function navBar()
               <button type="button" id="tab_tracks" class="nav-link" onclick="tabClicked('tracks')">Flights</button>
            </li>
            <li class="nav-item">
-              <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
+              <button type="button" id="tab_military" class="nav-link" onclick="tabClicked('military')">Military</button>
            </li>
            <li class="nav-item">
-              <button type="button" id="tab_reports" class="nav-link" onclick="tabClicked('reports')">Reports</button>
+              <button type="button" id="tab_graphs" class="nav-link" onclick="tabClicked('graphs')">Graphs</button>
            </li>
            <li class="nav-item">
               <button type="button" id="tab_about" class="nav-link" onclick="tabClicked('about')">About</button>
@@ -357,12 +357,83 @@ function tracksPanel()
 <?php
 }
 
-function reportsPanel()
+function militaryPanel()
 {
 ?>
 
-<div id="panel_reports" class="container d-none">
-   Under Construction
+<div id="panel_military" class="container d-none">
+<div class="row">
+   <h3>Flights By Category</h3>
+   <p>7-day History</p>
+   <hr>
+   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-fltcat.html"></div>
+</div>
+
+<div class="row">
+   <h3>Top 10 by Flight Count</h3>
+   <p>24-hour Window</p>
+   <hr>
+   <div class="col col-md-4 text-start">
+      Light
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      Small
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      High Performance
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a1.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a2.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a6.html"></div>
+</div>
+
+<div class="row">
+   <hr>
+   <div class="col col-md-4 text-start">
+      Medium
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      Large
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      Heavy
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a3.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a4.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a5.html"></div>
+</div>
+
+<div class="row">
+   <hr>
+   <div class="col col-md-4 text-start">
+      Rotorcraft
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      VTOL
+      <hr>
+   </div>
+   <div class="col col-md-4 text-start">
+      UAV
+      <hr>
+   </div>
+</div>
+<div class="row">
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a7.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10b1.html"></div>
+   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10b2.html"></div>
+</div>
+
 </div>
 
 <?php

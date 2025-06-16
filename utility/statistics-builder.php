@@ -359,9 +359,13 @@ function getTotalRecordCounts($db)
     $ret = [];
 
     $sql = "SELECT
-	            (SELECT COUNT(*) FROM aircraft) AS \"Total Aircraft\",
-                (SELECT COUNT(*) FROM flight) AS \"Total Flights\",
-                (SELECT COUNT(*) FROM flight_track) AS \"Total Flight Tracks\"";
+	            (SELECT COUNT(*) FROM aircraft) AS \"Aircraft Seen\",
+                (SELECT COUNT(*) FROM flight) AS \"Flights Seen\",
+                (SELECT COUNT(*) FROM flight_track) AS \"Flight Tracks Seen\",
+                (SELECT COUNT(*) FROM faa.master) AS \"FAA Aircraft\",
+                (SELECT COUNT(*) FROM faa.acftref) AS \"FAA Aircraft Models\",
+                (SELECT COUNT(*) FROM faa.engine) AS \"FAA Engine Models\",
+                (SELECT COUNT(*) FROM icao.airport) AS \"ICAO Airports\"";
     $ret = ['Total Records' => retrieveDetailResults($db, $sql)[0]];
 
     return $ret;

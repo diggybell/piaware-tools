@@ -1,10 +1,10 @@
 body {
-  background-color : lightgray;
+  background-color : lightgrey;
   color : black;
 }
  
 .pt-banner {
-  background-color: darkblue;
+  background-color: grey;
   color: white;
   height: 100px;
 }
@@ -28,7 +28,7 @@ body {
 }
 
 table {
-  background-color : lightgray;
+  background-color : lightgrey;
   color : black;
   font-size: 75%;
 }

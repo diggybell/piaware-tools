@@ -18,7 +18,7 @@
    <div class="row">
       <div class="col col-md-8">
          <h3>PiAware Tools Dashboard</h3>
-         <p id="lastUpdated"></p>
+         <p class="text-small" id="lastUpdated"></p>
       </div>
       <div class="col col-md-4 float-end">
          <img src="images/piaware-tools-background.png" class="float-end" />
@@ -145,29 +145,39 @@ function dashboardPanel()
 <div id="panel_dashboard" class="container d-block sm_panel"> <!-- start dashboard panel -->
 
 <div class="row">
-   <h3>System Totals</h3>
-   <hr>
-   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-totals.html"></div>
+   <div class="col col-md-12 align-middle">
+      <h3>System Totals</h3>
+      <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-totals.html"></div>
+   </div>
 </div>
 <div class="row">
+   <div class="col col-md-12 align-middle">
    <h3>Aircraft</h3>
    <hr>
-   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-aircraft.html"></div>
+   <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-aircraft.html"></div>
+   </div>
 </div>
 <div class="row">
-   <h3>Flights</h3>
-   <hr>
-   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flights.html"></div>
+   <div class="col col-md-12 align-middle">
+      <h3>Flights</h3>
+      <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flights.html"></div>
+   </div>
 </div>
 <div class="row">
-   <h3>Flight Tracks</h3>
-   <hr>
-   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-tracks.html"></div>
+   <div class="col col-md-12 align-middle">
+      <h3>Flight Tracks</h3>
+      <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-tracks.html"></div>
+   </div>
 </div>
 <div class="row">
-   <h3>Process Status</h3>
-   <hr>
-   <div class="col col-md-12 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-process.html"></div>
+   <div class="col col-md-12 align-middle">
+      <h3>Process Status</h3>
+      <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-process.html"></div>
+   </div>
 </div>
 
 </div> <!-- end of dashboard panel -->
@@ -223,22 +233,20 @@ function aircraftPanel()
    <h3>Top 10 Aircraft</h3>
    <hr>
    <div class="col col-md-4 text-start">
-      Light (< 15,500lb)
+      Light (&lt; 15,500lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Small (15,500-75,000lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a2.html"></div>
    </div>
    <div class="col col-md-4 text-start">
-      High Performance > 5g and 400kt
+      High Performance &gt; 5g and 400kt
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a6.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a2.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a6.html"></div>
 </div>
 
 <div class="row">
@@ -246,20 +254,18 @@ function aircraftPanel()
    <div class="col col-md-4 text-start">
       Large (75,000-300,000lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a3.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       High Vortex
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a4.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Heavy (Over 300,000lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a5.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a3.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a4.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a5.html"></div>
 </div>
 
 <div class="row">
@@ -267,20 +273,18 @@ function aircraftPanel()
    <div class="col col-md-4 text-start">
       Rotorcraft
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Glider/Sailplane
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Airship/Balloon
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b2.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b2.html"></div>
 </div>
 
 </div>
@@ -306,20 +310,18 @@ function dodAircraftPanel()
    <div class="col col-md-4 text-start">
       Light
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Small
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a2.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       High Performance
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a6.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a2.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a6.html"></div>
 </div>
 
 <div class="row">
@@ -327,20 +329,18 @@ function dodAircraftPanel()
    <div class="col col-md-4 text-start">
       Medium
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a3.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Large
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a4.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Heavy
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a5.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a3.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a4.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a5.html"></div>
 </div>
 
 <div class="row">
@@ -348,20 +348,20 @@ function dodAircraftPanel()
    <div class="col col-md-4 text-start">
       Rotorcraft
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a7.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       VTOL
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10b1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Unmanned
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10b2.html"></div>
    </div>
 </div>
 <div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10a7.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10b1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-top10b2.html"></div>
 </div>
 
 </div>
@@ -387,22 +387,20 @@ function tracksPanel()
    <p>24-hour Window</p>
    <hr>
    <div class="col col-md-4 text-start">
-      Light (< 15,500lb)
+      Light (&lt; 15,500lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Small (15,500-75,000lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a2.html"></div>
    </div>
    <div class="col col-md-4 text-start">
-      High Performance > 5g and 400kt
+      High Performance &gt; 5g and 400kt
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a6.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a2.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a6.html"></div>
 </div>
 
 <div class="row">
@@ -410,20 +408,18 @@ function tracksPanel()
    <div class="col col-md-4 text-start">
       Large (75,000-300,000lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a3.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       High Vortex
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a4.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Heavy (Over 300,000lb)
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a5.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a3.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a4.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a5.html"></div>
 </div>
 
 <div class="row">
@@ -431,20 +427,18 @@ function tracksPanel()
    <div class="col col-md-4 text-start">
       Rotorcraft
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Glider/Sailplane
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Airship/Balloon
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b2.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b2.html"></div>
 </div>
 
 </div>
@@ -471,20 +465,18 @@ function dodFlightPanel()
    <div class="col col-md-4 text-start">
       Light
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Small
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a2.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       High Performance
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a6.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a2.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a6.html"></div>
 </div>
 
 <div class="row">
@@ -492,20 +484,18 @@ function dodFlightPanel()
    <div class="col col-md-4 text-start">
       Medium
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a3.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Large
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a4.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Heavy
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a5.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a3.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a4.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a5.html"></div>
 </div>
 
 <div class="row">
@@ -513,20 +503,18 @@ function dodFlightPanel()
    <div class="col col-md-4 text-start">
       Rotorcraft
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a7.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       VTOL
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10b1.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       UAV
       <hr>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10b2.html"></div>
    </div>
-</div>
-<div class="row">
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10a7.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10b1.html"></div>
-   <div class="col col-md-4 align-middle pt-dynamic-refresh" pt-external-content="graphs/dod-dashboard-flttop10b2.html"></div>
 </div>
 
 </div>
@@ -547,7 +535,7 @@ In 1989 I got my private pilot's license but wasn't able to stay active due to f
 to my 8-year old self I discovered radio and have spent way too much time tinkering with them. So what happens when they come together?
 </p>
 <p>
-Given the PiAware Tools name, I started playing with a FlightAware.com PiAware ADS-B receiver. Through out the May of 2025 I built the engine that is gathering
+Given the PiAware Tools name, I started playing with a FlightAware.com PiAware ADS-B receiver. Through out the month of May of 2025 I built the engine that is gathering
 all of the data that is presented on this page. This page is displaying statistics and status information for my PiAware receiver.
 </p>
 <p>

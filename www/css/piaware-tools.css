@@ -1,10 +1,10 @@
 body {
-  background-color : lightgrey;
-  color : black;
+  background-color : black;
+  color : white;
 }
  
 .pt-banner {
-  background-color: grey;
+  background-color: black;
   color: white;
   height: 100px;
 }
@@ -17,9 +17,13 @@ body {
   font-size: 100%;
 }
 
+.text-small {
+  font-size: 75%;
+}
+
 .form-control, input, aux-control {
   background-color : darkgray;
-  color : black;
+  color : white;
 }
 
 .navbtn {
@@ -28,7 +32,7 @@ body {
 }
 
 table {
-  background-color : lightgrey;
+  background-color : lightsteelblue;
   color : black;
   font-size: 75%;
 }

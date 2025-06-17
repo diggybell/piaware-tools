@@ -26,5 +26,5 @@ SELECT CONCAT('N', m.n_number) AS n_number,
        e.model AS engine_model,
        faa.GetEngineType(e.type) AS engine_type
   FROM faa.master m
-         INNER JOIN faa.acftref a ON (m.mfr_mdl_code = a.code)
-         INNER JOIN faa.engine e ON (m.eng_mfr_mdl = e.code);
+         LEFT JOIN faa.acftref a ON (m.mfr_mdl_code = a.code)
+         LEFT JOIN faa.engine e ON (m.eng_mfr_mdl = e.code);

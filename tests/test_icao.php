@@ -3,7 +3,7 @@
 include_once('../lib/config.php');
 include_once('../lib/icao.php');
 
-$tail = 'N999ZZ';
+$tail = 'N99999';
 $tgtCode = 0xAE29DD;
 
 $icao = icaoHexCode($tail);

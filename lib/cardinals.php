@@ -55,6 +55,7 @@ function getRangeRingCount()
     \param $lon1 Longitude of first position
     \param $lat2 Latitude of second position
     \param $lon2 Longitude of second position
+    \param $precise Return values as float
     \returns Array
     \details This function will provide multiple pieces of data related to two points. The results are returned in an array
     with the keys as defined below.
@@ -64,16 +65,24 @@ function getRangeRingCount()
     \retval cardinal The Cardinal direction from the ADSB receiver
     \retval ring The range ring the position is in
 */
-function getDistanceAndBearing($lat1, $lon1, $lat2, $lon2)
+function getDistanceAndBearing($lat1, $lon1, $lat2, $lon2, $precise=false)
 { 
     // get the values from the coordinates
     $distance = getDistance($lat1, $lon1, $lat2, $lon2);
-    $bearingDeg = getBearing($lat1, $lon1, $lat2, $lon2);
+    $bearingDeg = getBearing($lat1, $lon1, $lat2, $lon2, $precise);
 	
     // convert units as required
     $miles = $distance * 60;
-    $km = round($miles * 1.609344); 
-	$miles = round($miles);
+    if(!$precise)
+    {
+        $km = round($miles * 1.609344); 
+	    $miles = round($miles);
+    }
+    else
+    {
+        $km = $miles * 1.609344;
+        $miles = $miles;
+    }
     
     // get bearing and range classifiers
 	$bearingWR = getCardinal($bearingDeg);
@@ -106,12 +115,21 @@ function getDistance($lat1, $lon1, $lat2, $lon2)
     \param $lon1 Longitude of first position
     \param $lat2 Latitude of second position
     \param $lon2 Longitude of second position
+    \param $precise Return value as float
     \returns Distance between the two points
 */
-function getBearing($lat1, $lon1, $lat2, $lon2)
+function getBearing($lat1, $lon1, $lat2, $lon2, $precise=false)
 {
 	$bearing = (rad2deg(atan2(sin(deg2rad($lon2) - deg2rad($lon1)) * cos(deg2rad($lat2)), cos(deg2rad($lat1)) *
-               sin(deg2rad($lat2)) - sin(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($lon2) - deg2rad($lon1)))) + 360) % 360;
+               sin(deg2rad($lat2)) - sin(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($lon2) - deg2rad($lon1)))) + 360);
+    if(!$precise)
+    {
+        $bearing %= 360;
+    }
+    else
+    {
+        fmod($bearing, 360.0);
+    }
     return $bearing;
 }
 

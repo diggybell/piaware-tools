@@ -1,0 +1,27 @@
+USE airline;
+
+DROP FUNCTION IF EXISTS GetAirlineType;
+DELIMITER $$
+CREATE FUNCTION GetAirlineType(search_code VARCHAR(2)) RETURNS VARCHAR(25) DETERMINISTIC
+BEGIN
+   DECLARE RetStr VARCHAR(25) DEFAULT NULL;
+
+   SELECT description INTO RetStr FROM airline_type WHERE code = search_code;
+   RETURN RetStr;
+END; $$
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS GetAirlineDBA;
+DELIMITER $$
+CREATE FUNCTION GetAirlineDBA(search_name VARCHAR(60)) RETURNS VARCHAR(25) DETERMINISTIC
+BEGIN
+   DECLARE RetStr VARCHAR(25) DEFAULT NULL;
+
+   SELECT code INTO RetStr FROM airline WHERE name = search_name;
+   IF RetStr IS NULL THEN
+      SELECT code INTO RetStr FROM airline_dba WHERE name = search_name;
+   END IF;
+
+   RETURN RetStr;
+END; $$
+DELIMITER ;

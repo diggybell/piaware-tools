@@ -276,9 +276,9 @@ function aircraftPanel()
       <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10a7.html"></div>
    </div>
    <div class="col col-md-4 text-start">
-      Glider/Sailplane
+      Ultralight
       <hr>
-      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b1.html"></div>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-top10b4.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Airship/Balloon
@@ -430,9 +430,9 @@ function tracksPanel()
       <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10a7.html"></div>
    </div>
    <div class="col col-md-4 text-start">
-      Glider/Sailplane
+      Ultralight
       <hr>
-      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b1.html"></div>
+      <div class="pt-dynamic-refresh" pt-external-content="graphs/dashboard-flttop10b4.html"></div>
    </div>
    <div class="col col-md-4 text-start">
       Airship/Balloon

@@ -305,6 +305,9 @@ switch($section)
     case 'top10b4':
         $content = detailTable($stats['aircraft-top-10']['B4']);
         break;
+    case 'top10b6':
+        $content = detailTable($stats['aircraft-top-10']['B6']);
+        break;
     case 'fltcat':
         $content = statsTable($stats['flight-category']);
         break;
@@ -340,6 +343,9 @@ switch($section)
         break;
     case 'flttop10b4':
         $content = detailTable($stats['flight-top-10']['B4']);
+        break;
+    case 'flttop10b6':
+        $content = detailTable($stats['flight-top-10']['B6']);
         break;
     default:
         break;

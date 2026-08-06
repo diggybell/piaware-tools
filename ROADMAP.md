@@ -23,6 +23,7 @@ I have curated data from many different planespotters to create a registry of Do
 constructed to mirror the structure used by the FAA in their registry. The details on each of the aircraft types
 was gathered from public sources such as af.mil and Wikipedia. The tail number, ICAO mode-S hex code, branch of
 service, assigned base, and unit were all gathered by planespotters.
+
 * DoD Registry View
 The DoD registry is a read-only copy of data capturing DoD aircraft. This module will allow the user to view all
 of the details that are contained in the registry. Features to update this registry will be determined in the Fourth Step below.
